@@ -1,0 +1,60 @@
+/* 
+  Localizable.strings
+  rank
+
+  Created by Larry on 10/23/12.
+  Copyright (c) 2012 warycat.com. All rights reserved.
+*/
+"DONE" = "完成";
+
+"ADD" = "添加";
+
+"MYINFO" = "个人信息";
+
+"EDIT" = "编辑";
+
+"ITEMS" = "个人信息";
+
+"ADDITEM" = "添加条目";
+
+"NICKNAME" = "昵称";
+
+"SEX" = "性别";
+
+"MALE" = "男";
+
+"FEMALE" = "女";
+
+"BIRTHDAY" = "生日";
+
+"CITY" = "城市";
+
+"COLLEGE" = "大学";
+
+"COMPANY" = "公司";
+
+"PROFESSION" = "职业";
+
+"HOBBY" = "兴趣爱好";
+
+"QQ" = "QQ";
+
+"PHONE" = "手机";
+
+"EMAIL" = "Email";
+
+"FACETIME" = "FaceTime";
+
+"SINAWEIBO" = "新浪微博";
+
+"RENREN" = "人人网";
+
+"DOUBAN" = "豆瓣网";
+
+"ROTATE DEVICE FOR PHOTOS" = "旋转设备看照片";
+
+"PHOTOS" = "照片";
+
+"NOTICE" = "关注";
+
+"IGNORE" = "忽略";

@@ -7,8 +7,8 @@
 //
 
 #import "AppDelegate.h"
-
-#import "MainViewController.h"
+#import "RankClient.h"
+#import "WebViewController.h"
 
 @implementation AppDelegate
 
@@ -16,14 +16,64 @@
 @synthesize managedObjectModel = _managedObjectModel;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 
+- (void)observeNotification:(NSNotification *)notification
+{
+    NSLog(@"%@",notification);
+    if (![[notification.userInfo objectForKey:@"key"]isEqualToString:@"url"]) {
+        return;
+    }
+    NSString *url = [notification.userInfo objectForKey:@"value"];
+    if (!url) {
+        return;
+    }
+    UIStoryboard *sb = [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone" bundle:[NSBundle mainBundle]];
+    WebViewController *wvc = [sb instantiateViewControllerWithIdentifier:@"WebViewController"];
+    wvc.URLString = url;
+    UIViewController *vc = self.window.rootViewController;
+    while (vc.presentedViewController) {
+        vc = vc.presentedViewController;
+    }
+    [vc presentModalViewController:wvc animated:YES];
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(observeNotification:) name:RANK_NOTIFICATION object:nil];
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
+     UIRemoteNotificationTypeAlert|
+     UIRemoteNotificationTypeBadge|
+     UIRemoteNotificationTypeNewsstandContentAvailability|
+     UIRemoteNotificationTypeSound
+     ];
+    NSDictionary *remoteNotification = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+    if (remoteNotification) {
+        [RankClient processRemoteNotification:remoteNotification];
+    }
+    
+    [[UINavigationBar appearance]setTintColor:[UIColor orangeColor]];
+    [[UIToolbar appearance]setTintColor:[UIColor orangeColor]];
+    [[UISearchBar appearance]setTintColor:[UIColor orangeColor]];
+    
     // Override point for customization after application launch.
-    MainViewController *controller = (MainViewController *)self.window.rootViewController;
-    controller.managedObjectContext = self.managedObjectContext;
     return YES;
 }
-							
+
+- (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken
+{
+    [RankClient registerPeerWithToken:deviceToken withHandler:^() {
+    }];
+}
+
+- (void)application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error
+{
+	NSLog(@"Failed to get token, error: %@", error);
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
+{
+    [RankClient processRemoteNotification:(NSDictionary *)userInfo];
+}
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
