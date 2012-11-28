@@ -8,6 +8,7 @@
 
 #import "PhotoViewController.h"
 #import "RankClient.h"
+#import "AppDelegate.h"
 
 @interface PhotoViewController ()
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
@@ -34,7 +35,10 @@
     self.imageView.image = image;
     UIImage *thumbnail = [self imageWithImage:image ByScalingAndCroppingForSize:[self thumbnailsize]];
     NSData *thumbnailData = UIImageJPEGRepresentation(thumbnail, 1.0f);
-    [[NSUserDefaults standardUserDefaults]setObject:thumbnailData forKey:self.peer];
+    AppDelegate *app = [UIApplication sharedApplication].delegate;
+    NSURL *fileURL = [[app applicationDocumentsDirectory] URLByAppendingPathComponent:self.peer];
+    [thumbnailData writeToURL:fileURL atomically:YES];
+//    [[NSUserDefaults standardUserDefaults]setObject:thumbnailData forKey:self.peer];
 
 	// Do any additional setup after loading the view.
 }

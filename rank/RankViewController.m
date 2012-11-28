@@ -28,7 +28,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    NSLog(@"RankViewController");
     NSURL *ranksURL = [[NSBundle mainBundle] URLForResource:@"list" withExtension:@"json"];
     NSData *ranksData = [NSData dataWithContentsOfURL:ranksURL];
     self.ranks = [NSJSONSerialization JSONObjectWithData:ranksData

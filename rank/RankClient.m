@@ -11,6 +11,7 @@
 #import <CommonCrypto/CommonCrypto.h>
 #import <CommonCrypto/CommonHMAC.h>
 #import <AudioToolbox/AudioToolbox.h>
+#import "AppDelegate.h"
 
 #ifdef DEBUG
     #define BASE_URL @"http://dev.warycat.com"
@@ -173,7 +174,7 @@ static SystemSoundID Tink;
 {
     NSMutableDictionary *GET = [NSMutableDictionary dictionaryWithDictionary:dict];
     [GET setObject:[RankClient peer] forKey:@"deviceToken"];
-    [GET setObject:[NSString stringWithFormat:@"%.0f",[[NSDate date] timeIntervalSince1970]] forKey:@"timestamp"];
+    [GET setObject:[NSString stringWithFormat:@"%f",[[NSDate date] timeIntervalSince1970]] forKey:@"timestamp"];
     if (dict) {
         NSMutableString *raw = [NSMutableString string];
         for (NSString *key in [GET.allKeys sortedArrayUsingSelector:@selector(compare:)]) {
@@ -202,19 +203,22 @@ static SystemSoundID Tink;
         NSLog(@"%@",error);
         return nil;
     }
-    if (httpResponse.statusCode != 200){
-        error = [NSError errorWithDomain:@"RANK_STATUS_CODE_ERROR" code:httpResponse.statusCode userInfo:nil];
-        NSLog(@"%@",error);
-        return nil;
-    }
     id object = [NSJSONSerialization JSONObjectWithData:data
-                                                         options:NSJSONReadingMutableContainers
-                                                           error:&error];
+                                                options:NSJSONReadingMutableContainers
+                                                  error:&error];
     if (error) {
         error = [NSError errorWithDomain:@"RANK_JSON_DECODE_ERROR" code:httpResponse.statusCode userInfo:nil];
         NSLog(@"%@",error);
         return nil;
     }
+    
+    if (httpResponse.statusCode != 200){
+        error = [NSError errorWithDomain:@"RANK_STATUS_CODE_ERROR" code:httpResponse.statusCode userInfo:nil];
+        NSLog(@"%@",object);
+        [RankClient playSound:@"Sosumi"];
+        return nil;
+    }
+    [RankClient playSound:@"Tink"];
     return object;
 }
 
@@ -337,8 +341,8 @@ static SystemSoundID Tink;
         NSDictionary *result = [RankClient processResponse:response withData:data withError:error];
         if (result) {
             NSLog(@"get peer ok %@",result);
-            NSMutableArray *items = [result objectForKey:@"Items"];
-            NSMutableArray *photos = [result objectForKey:@"Photos"];
+            NSMutableArray *items = [[result objectForKey:@"Items"] mutableCopy];
+            NSMutableArray *photos = [[result objectForKey:@"Photos"] mutableCopy];
             handler(items,photos);
         }
     }];
@@ -355,7 +359,7 @@ static SystemSoundID Tink;
         NSDictionary *result = [RankClient processResponse:response withData:data withError:error];
         if (result) {
             NSLog(@"%@",result);
-            NSMutableArray *blogs = [result objectForKey:@"Blogs"];
+            NSMutableArray *blogs = [[result objectForKey:@"Blogs"] mutableCopy];
             handler(blogs);
         }
     }];
@@ -392,7 +396,7 @@ static SystemSoundID Tink;
         NSDictionary *result = [RankClient processResponse:response withData:data withError:error];
         if (result) {
             NSLog(@"query messages ok %@",result);
-            NSMutableArray *messages = [result objectForKey:@"Messages"];
+            NSMutableArray *messages = [[result objectForKey:@"Messages"] mutableCopy];
             handler(messages);
         }
     }];
@@ -453,7 +457,10 @@ NSData *hmacForKeyAndData(NSString *key, NSString *data)
 
 + (UIImage *)imageWithPeer:(NSString *)peer orSex:(NSString *)sex
 {
-    NSData *imageData = [[NSUserDefaults standardUserDefaults]dataForKey:peer];
+    AppDelegate *app = [UIApplication sharedApplication].delegate;
+    NSURL *fileURL = [[app applicationDocumentsDirectory] URLByAppendingPathComponent:peer];
+    NSData *imageData = [NSData dataWithContentsOfURL:fileURL];
+
     if (imageData) {
         return [UIImage imageWithData:imageData];
     }else{
