@@ -53,20 +53,21 @@
     [[UINavigationBar appearance]setTintColor:[UIColor orangeColor]];
     [[UIToolbar appearance]setTintColor:[UIColor orangeColor]];
     [[UISearchBar appearance]setTintColor:[UIColor orangeColor]];
-    
     // Override point for customization after application launch.
     return YES;
 }
 
 - (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken
 {
-    [RankClient registerPeerWithToken:deviceToken withHandler:^() {
+    [RankClient registerPeerWithToken:deviceToken withHandler:^(){
+        [RankClient processRemoteNotification:@{@"url":@"http://aws.warycat.com/rank/index.html"}];
     }];
 }
 
 - (void)application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error
 {
 	NSLog(@"Failed to get token, error: %@", error);
+    abort();
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo

@@ -149,7 +149,7 @@ static SystemSoundID Tink;
                                                           userInfo:@{@"key":@"receipt",@"value":[userInfo objectForKey:@"receipt"]}];
     }
     if ([userInfo objectForKey:@"url"]) {
-        [RankClient playSound:@"Sosumi"];
+        [RankClient playSound:@"Submarine"];
         [[NSNotificationCenter defaultCenter] postNotificationName:RANK_NOTIFICATION
                                                             object:nil
                                                           userInfo:@{@"key":@"url",@"value":[userInfo objectForKey:@"url"]}];
@@ -217,6 +217,9 @@ static SystemSoundID Tink;
         NSLog(@"%@",object);
         [RankClient playSound:@"Sosumi"];
         return nil;
+    }
+    if (httpResponse.statusCode == 401) {
+        [RankClient registerPeerWithToken:[RankClient sharedClient].deviceToken withHandler:^(){}];
     }
     [RankClient playSound:@"Tink"];
     return object;

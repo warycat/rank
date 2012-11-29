@@ -173,11 +173,7 @@
 {
     static NSString *CellIdentifier = @"Rank Cell";
     UITableViewCell *cell;
-    if ([tableView respondsToSelector:@selector(dequeueReusableCellWithIdentifier:forIndexPath:)]) {
-        cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
-    }else{
-        cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    }
+    cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     NSString *college = nil;
     if (tableView == self.searchDisplayController.searchResultsTableView)
@@ -283,22 +279,23 @@
 
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
 {
-    [self filterContentForSearchText:searchString scope:
-     [[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:[self.searchDisplayController.searchBar selectedScopeButtonIndex]]];
-    
+//    [self filterContentForSearchText:searchString scope:
+//     [[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:[self.searchDisplayController.searchBar selectedScopeButtonIndex]]];
     // Return YES to cause the search result table view to be reloaded.
+    [self filterContentForSearchText:searchString scope:nil];
+    NSLog(@"%@",searchString);
     return YES;
 }
 
 
-- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchScope:(NSInteger)searchOption
-{
-    [self filterContentForSearchText:[self.searchDisplayController.searchBar text] scope:
-    [[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:searchOption]];
-    
-    // Return YES to cause the search result table view to be reloaded.
-    return YES;
-}
+//- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchScope:(NSInteger)searchOption
+//{
+//    [self filterContentForSearchText:[self.searchDisplayController.searchBar text] scope:
+//    [[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:searchOption]];
+//    
+//    // Return YES to cause the search result table view to be reloaded.
+//    return YES;
+//}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {
