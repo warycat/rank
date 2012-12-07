@@ -61,12 +61,12 @@
 }
 - (IBAction)confirmEditString:(id)sender {
     [self.item setObject:self.textView.text forKey:@"S"];
-    UINavigationController *nvc = (UINavigationController *) self.navigationController.presentingViewController;
-    HomeViewController *hvc = (HomeViewController *) nvc.topViewController;
-    [hvc dismissViewControllerAnimated:YES completion:^{
-        [hvc.tableView reloadData];
-    }];
     [RankClient updateItem:[self.item objectForKey:@"K"] withString:[self.item objectForKey:@"S"] withHandler:^() {
+        UINavigationController *nvc = (UINavigationController *) self.navigationController.presentingViewController;
+        HomeViewController *hvc = (HomeViewController *) nvc.topViewController;
+        [hvc dismissViewControllerAnimated:YES completion:^{
+            [hvc.tableView reloadData];
+        }];
     }];
 }
 
@@ -74,4 +74,14 @@
     [self setTextView:nil];
     [super viewDidUnload];
 }
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)orientation
+{
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        return (orientation == UIInterfaceOrientationPortrait );
+    }else{
+        return YES;
+    }
+}
+
 @end

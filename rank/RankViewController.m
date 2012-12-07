@@ -297,11 +297,14 @@
 //    return YES;
 //}
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)orientation
 {
-    return toInterfaceOrientation == UIInterfaceOrientationPortrait;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        return (orientation == UIInterfaceOrientationPortrait );
+    }else{
+        return YES;
+    }
 }
-
 - (void)searchBarBookmarkButtonClicked:(UISearchBar *)searchBar
 {
     NSString *college = [[NSUserDefaults standardUserDefaults]stringForKey:@"BookmarkedCollege"];

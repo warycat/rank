@@ -15,9 +15,6 @@
 #import "CoverFlowViewController.h"
 
 @interface HomeViewController ()
-{
-    BOOL isShowingLandscapeView;
-}
 
 @property (strong, nonatomic) NSMutableArray *items;
 @property (strong, nonatomic) NSMutableArray *photos;
@@ -30,17 +27,6 @@
 {
     [super viewDidLoad];
     self.tableView.allowsSelectionDuringEditing = YES;
-    isShowingLandscapeView = NO;
-    if( UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
-        NSLog(@"pad");
-    }else {
-        NSLog(@"phone");
-        [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(orientationChanged:)
-                                                     name:UIDeviceOrientationDidChangeNotification
-                                                   object:nil];
-    }
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(observeNotification:) name:RANK_NOTIFICATION object:nil];
     [self loadPeer];
 }
@@ -58,6 +44,9 @@
         self.photos = photos;
         [self.tableView reloadData];
         self.navigationItem.rightBarButtonItem.enabled = YES;
+        if (!self.items.count) {
+            [self enterEditMode:nil];
+        }
     }];
 }
 
@@ -75,29 +64,14 @@
     }
 }
 
-- (void)orientationChanged:(NSNotification *)notification
-{
-    UIDeviceOrientation deviceOrientation = [UIDevice currentDevice].orientation;
-    if (UIDeviceOrientationIsLandscape(deviceOrientation) &&
-        !isShowingLandscapeView)
-    {
-        [[UIApplication sharedApplication] setStatusBarHidden:YES];
-        [self performSegueWithIdentifier:@"CoverFlowSegue" sender:self];
-        isShowingLandscapeView = YES;
-    }
-    else if (UIDeviceOrientationIsPortrait(deviceOrientation) &&
-             isShowingLandscapeView)
-    {
-        [[UIApplication sharedApplication] setStatusBarHidden:NO];
-        [self dismissViewControllerAnimated:YES completion:^{
-        }];
-        isShowingLandscapeView = NO;
-    }
-}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)orientation
 {
-    return (orientation == UIInterfaceOrientationPortrait );
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        return (orientation == UIInterfaceOrientationPortrait );
+    }else{
+        return YES;
+    }
 }
 
 - (IBAction)enterEditMode:(id)sender {
@@ -132,43 +106,24 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    if( UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
-        if (self.items) {
-            return 2;
-        }else{
-            return 1;
-        }
-    }else {
+    if (self.items) {
+        return 2;
+    }else{
         return 1;
     }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if( UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
-        if (section == 0) {
-            return self.items.count;
-        }
-        if (section == 1) {
-            return 1;
-        }
-        return 0;
-    }else {
+    if (section == 0) {
         return self.items.count;
     }
+    if (section == 1) {
+        return 1;
+    }
+    return 0;
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
-{
-    if( UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
-        return nil;
-    }else {
-        if (self.items) {
-            return [NSString stringWithFormat:@"%@ %d",NSLocalizedString(@"ROTATE DEVICE FOR PHOTOS", nil),self.photos.count];
-        }
-        return nil;
-    }
-}
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -190,20 +145,15 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if( UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
-        if (indexPath.section == 1) {
-            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PhotoCell"];
-            cell.textLabel.text = [NSString stringWithFormat:@"%@ %d",NSLocalizedString(@"PHOTOS", nil),self.photos.count];
-            return cell;
-        }
+    if (indexPath.section == 1) {
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PhotoCell"];
+        cell.textLabel.text = [NSString stringWithFormat:@"%@",NSLocalizedString(@"ADD_AND_DELETE_PHOTOS", nil)];
+        cell.detailTextLabel.text = [NSString stringWithFormat:NSLocalizedString(@"PHOTOS", nil),self.photos.count];
+        return cell;
     }
     static NSString *CellIdentifier = @"ProfileCell";
     UITableViewCell *cell;
-    if ([tableView respondsToSelector:@selector(dequeueReusableCellWithIdentifier:forIndexPath:)]) {
-        cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
-    }else{
-        cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    }
+    cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     NSDictionary *dict = [self.items objectAtIndex:indexPath.row];
     cell.textLabel.text = NSLocalizedString([dict objectForKey:@"K"],nil);
     NSString *S = [dict objectForKey:@"S"];
@@ -242,23 +192,24 @@
 
 - (void)insertNewItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSIndexPath *cIndexPath = [indexPath copy];
     NSMutableDictionary *newItem = [NSMutableDictionary dictionaryWithObjects:@[@"",@"",@""]
                                                                       forKeys:@[@"K",@"S",@"N"]];;
     NSArray *newItemKeys = @[
         @"NICKNAME",
         @"SEX",
         @"BIRTHDAY",
+        @"PHONE",
+        @"FACETIME",
+        @"EMAIL",
+
         @"CITY",
         @"COLLEGE",
-    
         @"COMPANY",
         @"PROFESSION",
         @"HOBBY",
-        @"EMAIL",
-        @"PHONE",
     
         @"QQ",
-        @"FACETIME",
         @"SINAWEIBO",
         @"RENREN",
         @"DOUBAN",
@@ -276,31 +227,16 @@
         if (!find) {
             newItem = [NSMutableDictionary dictionaryWithObjects:@[newItemKey,@"",@""]
                                                forKeys:@[@"K",@"S",@"N"]];
-            break;
+            if ([newItem isEqual:@{@"K":@"",@"S":@"",@"N":@""}]) {
+                continue;
+            }
+            [self.items insertObject:newItem atIndex:cIndexPath.row];
+            [self.tableView insertRowsAtIndexPaths:@[cIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            cIndexPath = [NSIndexPath indexPathForRow:cIndexPath.row+1 inSection:cIndexPath.section];
         }
     }
-    if ([newItem isEqual:@{@"K":@"",@"S":@"",@"N":@""}]) {
-        return;
-    }
-    [self.items insertObject:newItem atIndex:indexPath.row];
-    [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
-
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-    [self.items exchangeObjectAtIndex:fromIndexPath.row withObjectAtIndex:toIndexPath.row];
-}
-
-
-
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
 
 
 #pragma mark - Table view delegate
@@ -308,15 +244,14 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (tableView.isEditing) {
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-            if (indexPath.section == 1) {
-                [tableView deselectRowAtIndexPath:indexPath animated:YES];
-                return;
-            }
+        if (indexPath.section == 1) {
+            [tableView deselectRowAtIndexPath:indexPath animated:YES];
+            return;
         }
         NSMutableDictionary *item = [self.items objectAtIndex:indexPath.row];
         if (item == self.item) {
             [tableView deselectRowAtIndexPath:indexPath animated:YES];
+            [self insertNewItemAtIndexPath:indexPath];
         }else{
             NSString *key = [item objectForKey:@"K"];
             NSDictionary *identifiers = @{
@@ -344,10 +279,8 @@
             }
         }
     }else{
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-            if (indexPath.section == 1) {
-                [self performSegueWithIdentifier:@"CoverFlowSegue" sender:self];
-            }
+        if (indexPath.section == 1) {
+            [self performSegueWithIdentifier:@"CoverFlowSegue" sender:self];
         }
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
@@ -383,8 +316,6 @@
         cfvc.photos = self.photos;
     }
 }
-
-
 
 - (void)viewDidUnload {
     [super viewDidUnload];

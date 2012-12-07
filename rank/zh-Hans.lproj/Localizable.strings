@@ -51,10 +51,16 @@
 
 "DOUBAN" = "豆瓣网";
 
-"ROTATE DEVICE FOR PHOTOS" = "旋转设备看照片";
+"PHOTOS" = "%d 张照片";
 
-"PHOTOS" = "照片";
+"ADD_AND_DELETE_PHOTOS" = "添加和删除照片";
+
+"SET_ICON_PHOTO" = "设定头像照片";
 
 "NOTICE" = "关注";
 
 "IGNORE" = "忽略";
+
+"FIRSTBLOG" = "目前还没有人在这个大学发布微博，你可以点击新建创建一条微博，之后其他用户就会看到这条微博，如果他们对你或者你发的微博感兴趣，他们会通过微信的方式与你联系。";
+
+"NOPEER" = "去大学里找朋友";

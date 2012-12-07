@@ -69,17 +69,17 @@
 }
 
 - (IBAction)dismissEditSex:(id)sender {
-    [self.navigationController.presentingViewController dismissModalViewControllerAnimated:YES];    
+    [self.navigationController.presentingViewController dismissModalViewControllerAnimated:YES];
 }
 
 - (IBAction)confirmEditSex:(id)sender {
     [self.item setObject:self.sex forKey:@"S"];
-    UINavigationController *nvc = (UINavigationController *) self.navigationController.presentingViewController;
-    HomeViewController *hvc = (HomeViewController *) nvc.topViewController;
-    [hvc dismissViewControllerAnimated:YES completion:^{
-        [hvc.tableView reloadData];
-    }];
     [RankClient updateItem:[self.item objectForKey:@"K"] withString:[self.item objectForKey:@"S"] withHandler:^() {
+        UINavigationController *nvc = (UINavigationController *) self.navigationController.presentingViewController;
+        HomeViewController *hvc = (HomeViewController *) nvc.topViewController;
+        [hvc dismissViewControllerAnimated:YES completion:^{
+            [hvc.tableView reloadData];
+        }];
     }];
 }
 
@@ -89,4 +89,14 @@
     [self setFemaleCell:nil];
     [super viewDidUnload];
 }
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)orientation
+{
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        return (orientation == UIInterfaceOrientationPortrait );
+    }else{
+        return YES;
+    }
+}
+
 @end

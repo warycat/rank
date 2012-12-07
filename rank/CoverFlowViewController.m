@@ -105,7 +105,7 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)orientation
 {
-    return (orientation == UIInterfaceOrientationLandscapeLeft || orientation == UIInterfaceOrientationLandscapeRight);
+    return YES;
 }
 
 - (void)viewDidUnload {
@@ -167,9 +167,7 @@
 }
 
 - (IBAction)tap:(id)sender {
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        [self.presentingViewController dismissModalViewControllerAnimated:YES];
-    }
+    [self.presentingViewController dismissModalViewControllerAnimated:YES];
 }
 
 - (UIImage *)imageWithImage:(UIImage *)sourceImage ByScalingAndCroppingForSize:(CGSize)targetSize

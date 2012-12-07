@@ -33,7 +33,7 @@
     while (vc.presentedViewController) {
         vc = vc.presentedViewController;
     }
-    [vc presentModalViewController:wvc animated:YES];
+    [vc presentModalViewController:wvc animated:NO];
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -183,8 +183,10 @@
          Lightweight migration will only work for a limited set of schema changes; consult "Core Data Model Versioning and Data Migration Programming Guide" for details.
          
          */
+        [[NSFileManager defaultManager] removeItemAtURL:storeURL error:nil];
+        [_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error];
         NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-        abort();
+        //abort();
     }    
     
     return _persistentStoreCoordinator;

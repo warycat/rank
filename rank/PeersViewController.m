@@ -22,7 +22,7 @@
 {
     if ([segue.identifier isEqualToString:@"MessagesSegue"]) {
         NSLog(@"%@",segue.identifier);
-        NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
+        NSIndexPath *indexPath = sender;
         MessagesViewController *mvc = segue.destinationViewController;
         NSDictionary *dict = [self.peers objectAtIndex:indexPath.row];
         mvc.peer = [dict objectForKey:@"P"];
@@ -52,8 +52,14 @@
 - (void)loadPeers
 {
     [RankClient queryPeersWithPeer:[RankClient peer] WithHandler:^(NSArray *peers) {
-        NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:@"T" ascending:NO];
-        self.peers = [NSMutableArray arrayWithArray:[peers sortedArrayUsingDescriptors:@[descriptor]]];
+        if (peers.count) {
+            NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:@"T" ascending:NO];
+            self.peers = [peers sortedArrayUsingDescriptors:@[descriptor]];
+            self.navigationItem.rightBarButtonItem.enabled = YES;
+        }else{
+            NSDictionary *nopeer = @{@"M":NSLocalizedString(@"NOPEER", nil),@"T":[NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]],@"P":[RankClient peer]};
+            self.peers = [NSArray arrayWithObject:nopeer];
+        }
         [self.tableView reloadData];
     }];
 }
@@ -63,6 +69,7 @@
     [super viewDidLoad];
     [self loadPeers];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(observeNotification:) name:RANK_NOTIFICATION object:nil];
+    self.navigationItem.rightBarButtonItem.enabled = NO;
 }
 
 - (void)dealloc
@@ -127,6 +134,16 @@
     return cell;
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSDictionary *peer = [self.peers objectAtIndex:indexPath.row];
+    if ([[peer objectForKey:@"P"]isEqualToString:[RankClient peer]]) {
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    }else{
+        [self performSegueWithIdentifier:@"MessagesSegue" sender:indexPath];
+    }
+}
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if( UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
@@ -167,5 +184,13 @@
     }
 }
 
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)orientation
+{
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        return (orientation == UIInterfaceOrientationPortrait );
+    }else{
+        return YES;
+    }
+}
 
 @end

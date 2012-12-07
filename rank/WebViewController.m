@@ -57,7 +57,7 @@
 }
 
 - (IBAction)dismissWebView:(id)sender {
-    [self.presentingViewController dismissModalViewControllerAnimated:YES];
+    [self.presentingViewController dismissModalViewControllerAnimated:NO];
 }
 
 - (IBAction)refreshWebView:(id)sender {
@@ -68,4 +68,14 @@
     [self setWebView:nil];
     [super viewDidUnload];
 }
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)orientation
+{
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        return (orientation == UIInterfaceOrientationPortrait );
+    }else{
+        return YES;
+    }
+}
+
 @end

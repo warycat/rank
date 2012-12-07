@@ -62,8 +62,13 @@
 {
     [RankClient queryBlogsInCollege:self.college WithHandler:^(NSArray *blogs) {
         NSLog(@"get blogs ok %@",blogs);
-        NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:@"T" ascending:NO];
-        self.blogs = [blogs sortedArrayUsingDescriptors:@[descriptor]];
+        if (blogs.count) {
+            NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:@"T" ascending:NO];
+            self.blogs = [blogs sortedArrayUsingDescriptors:@[descriptor]];
+        }else{
+            NSDictionary *firstBlog = @{@"P":[RankClient peer],@"T":[NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]],@"B":NSLocalizedString(@"FIRSTBLOG", nil)};
+            self.blogs = [NSArray arrayWithObject:firstBlog];
+        }
         [self.tableView reloadData];
     }];
 }
@@ -159,9 +164,13 @@
     }
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)orientation
 {
-    return toInterfaceOrientation == UIInterfaceOrientationPortrait;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        return (orientation == UIInterfaceOrientationPortrait );
+    }else{
+        return YES;
+    }
 }
 
 @end

@@ -56,18 +56,27 @@
 - (IBAction)confirmEditDate:(id)sender {
     NSLog(@"class %@",self.item.class);
     [self.item setObject:self.time forKey:@"N"];
-    UINavigationController *nvc = (UINavigationController *) self.navigationController.presentingViewController;
-    HomeViewController *hvc = (HomeViewController *) nvc.topViewController;
-    [hvc dismissViewControllerAnimated:YES completion:^{
-        [hvc.tableView reloadData];
-    }];
     NSNumber *n = [self.item objectForKey:@"N"];
     [RankClient updateItem:[self.item objectForKey:@"K"] withString:n.stringValue withHandler:^() {
+        UINavigationController *nvc = (UINavigationController *) self.navigationController.presentingViewController;
+        HomeViewController *hvc = (HomeViewController *) nvc.topViewController;
+        [hvc dismissViewControllerAnimated:YES completion:^{
+            [hvc.tableView reloadData];
+        }];
     }];
 }
 
 - (IBAction)dateChanged:(id)sender {
     self.time = [NSNumber numberWithInteger:self.datePicker.date.timeIntervalSince1970];
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)orientation
+{
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        return (orientation == UIInterfaceOrientationPortrait );
+    }else{
+        return YES;
+    }
 }
 
 @end

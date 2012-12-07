@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		25B074851670380D00495DC6 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B074841670380D00495DC6 /* Message.m */; };
 		25D5B0681664CC13002D2763 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25D5B0671664CC13002D2763 /* UIKit.framework */; };
 		25D5B06A1664CC13002D2763 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25D5B0691664CC13002D2763 /* Foundation.framework */; };
 		25D5B06C1664CC13002D2763 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25D5B06B1664CC13002D2763 /* CoreGraphics.framework */; };
@@ -92,6 +93,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		25B074831670380D00495DC6 /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Message.h; sourceTree = "<group>"; };
+		25B074841670380D00495DC6 /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Message.m; sourceTree = "<group>"; };
 		25D5B0631664CC13002D2763 /* rank.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = rank.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		25D5B0671664CC13002D2763 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		25D5B0691664CC13002D2763 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -449,6 +452,8 @@
 		25D5B1501664ED3B002D2763 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
+				25B074831670380D00495DC6 /* Message.h */,
+				25B074841670380D00495DC6 /* Message.m */,
 				25D5B14D1664EC9A002D2763 /* CoreDataTableViewController.h */,
 				25D5B14E1664EC9A002D2763 /* CoreDataTableViewController.m */,
 			);
@@ -618,6 +623,7 @@
 				25D5B12E1664CE78002D2763 /* WebViewController.m in Sources */,
 				25D5B1381664CF40002D2763 /* TDBadgedCell.m in Sources */,
 				25D5B14F1664EC9A002D2763 /* CoreDataTableViewController.m in Sources */,
+				25B074851670380D00495DC6 /* Message.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -684,7 +690,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: xia yinchu (6P2HDNY932)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -699,7 +705,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = YES;
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "65BB06E7-C59C-4403-BEE4-288504FAE3F7";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -714,7 +720,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -722,6 +728,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;

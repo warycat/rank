@@ -12,9 +12,6 @@
 #import "NewMessageViewController.h"
 
 @interface PeerViewController ()
-{
-    BOOL isShowingLandscapeView;
-}
 @property (strong, nonatomic) NSMutableArray *items;
 @property (strong, nonatomic) NSMutableArray *photos;
 @end
@@ -42,16 +39,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    isShowingLandscapeView = NO;
-    if( UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
-        NSLog(@"pad");
-    }else {
-        [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(orientationChanged:)
-                                                     name:UIDeviceOrientationDidChangeNotification
-                                                   object:nil];
-    }
     [self reloadData];
 }
 
@@ -78,61 +65,41 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    if( UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
-        if (self.items) {
-            return 2;
-        }else{
-            return 1;
-        }
-    }else {
+    if (self.items) {
+        return 2;
+    }else{
         return 1;
     }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if( UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
-        if (section == 0) {
-            return self.items.count;
-        }
-        if (section == 1) {
-            return 1;
-        }
-        return 0;
-    }else {
+    if (section == 0) {
         return self.items.count;
     }
-}
-
-- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
-{
-    if( UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
-        return nil;
-    }else {
-        if (self.items) {
-            return [NSString stringWithFormat:@"%@ %d",NSLocalizedString(@"ROTATE DEVICE FOR PHOTOS", nil),self.photos.count];
-        }
-        return nil;
+    if (section == 1) {
+        return 1;
     }
+    return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if( UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
-        if (indexPath.section == 1) {
-            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PhotoCell"];
-            cell.textLabel.text = [NSString stringWithFormat:@"%@ %d",NSLocalizedString(@"PHOTOS", nil),self.photos.count];
-            return cell;
-        }
+    if (indexPath.section == 1) {
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PhotoCell"];
+        cell.textLabel.text = [NSString stringWithFormat:@"%@",NSLocalizedString(@"SET_ICON_PHOTO", nil)];
+        cell.detailTextLabel.text = [NSString stringWithFormat:NSLocalizedString(@"PHOTOS", nil),self.photos.count];
+        return cell;
     }
     static NSString *CellIdentifier = @"ProfileCell";
     UITableViewCell *cell;
-    if ([tableView respondsToSelector:@selector(dequeueReusableCellWithIdentifier:forIndexPath:)]) {
-        cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
-    }else{
-        cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    }
+    cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     NSDictionary *dict = [self.items objectAtIndex:indexPath.row];
+    if ([self hasActionWithKey:[dict objectForKey:@"K"]]) {
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }else{
+        cell.accessoryType = UITableViewCellAccessoryNone;
+    }
     cell.textLabel.text = NSLocalizedString([dict objectForKey:@"K"],nil);
     NSString *S = [dict objectForKey:@"S"];
     if (S) {
@@ -146,27 +113,37 @@
         dateFormatter.timeStyle = NSDateFormatterNoStyle;
         cell.detailTextLabel.text = [dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:N.integerValue]];
     }
-    
     return cell;
 }
 
-
-- (void)orientationChanged:(NSNotification *)notification
+- (BOOL)hasActionWithKey:(NSString *)key
 {
-    UIDeviceOrientation deviceOrientation = [UIDevice currentDevice].orientation;
-    if (UIDeviceOrientationIsLandscape(deviceOrientation) &&
-        !isShowingLandscapeView)
-    {
-        [[UIApplication sharedApplication] setStatusBarHidden:YES];
-        [self performSegueWithIdentifier:@"CoverFlowSegue" sender:self];
-        isShowingLandscapeView = YES;
+    if ([key isEqualToString:@"EMAIL"]) {
+        return YES;
     }
-    else if (UIDeviceOrientationIsPortrait(deviceOrientation) &&
-             isShowingLandscapeView)
-    {
-        [[UIApplication sharedApplication] setStatusBarHidden:NO];
-        [self dismissViewControllerAnimated:YES completion:nil];
-        isShowingLandscapeView = NO;
+    if ([key isEqualToString:@"PHONE"]) {
+        return YES;
+    }
+    if ([key isEqualToString:@"FACETIME"]) {
+        return YES;
+    }
+    return NO;
+}
+
+- (void)performActionWithKey:(NSString *)key andValue:(NSString *)value
+{
+    NSURL *URL = nil;
+    if ([key isEqualToString:@"EMAIL"]) {
+        URL = [NSURL URLWithString:[NSString stringWithFormat:@"mailto://%@",value]];
+    }
+    if ([key isEqualToString:@"PHONE"]) {
+        URL = [NSURL URLWithString:[NSString stringWithFormat:@"tel://%@",value]];
+    }
+    if ([key isEqualToString:@"FACETIME"]) {
+        URL = [NSURL URLWithString:[NSString stringWithFormat:@"facetime://%@",value]];
+    }
+    if (URL) {
+        [[UIApplication sharedApplication]openURL:URL];
     }
 }
 
@@ -181,12 +158,15 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        if (indexPath.section == 1) {
-            [self performSegueWithIdentifier:@"CoverFlowSegue" sender:self];
-        }
+    if (indexPath.section == 1) {
+        [self performSegueWithIdentifier:@"CoverFlowSegue" sender:self];
     }
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    NSDictionary *dict = [self.items objectAtIndex:indexPath.row];
+    if ([self hasActionWithKey:[dict objectForKey:@"K"]]) {
+        [self performActionWithKey:[dict objectForKey:@"K"] andValue:[dict objectForKey:@"S"]];
+    }else{
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    }
 }
 
 - (IBAction)goBack:(id)sender {
