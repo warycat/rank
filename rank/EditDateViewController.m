@@ -7,7 +7,6 @@
 //
 
 #import "EditDateViewController.h"
-#import "HomeViewController.h"
 #import "RankClient.h"
 
 @interface EditDateViewController ()
@@ -50,19 +49,17 @@
     [super viewDidUnload];
 }
 - (IBAction)dismissEditDate:(id)sender {
-    [self.navigationController.presentingViewController dismissModalViewControllerAnimated:YES];
+    [self.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:^{}];
 }
 
 - (IBAction)confirmEditDate:(id)sender {
+    self.navigationItem.rightBarButtonItem.enabled = NO;
     NSLog(@"class %@",self.item.class);
     [self.item setObject:self.time forKey:@"N"];
+    [self.item setObject:self.textView.text forKey:@"S"];
     NSNumber *n = [self.item objectForKey:@"N"];
     [RankClient updateItem:[self.item objectForKey:@"K"] withString:n.stringValue withHandler:^() {
-        UINavigationController *nvc = (UINavigationController *) self.navigationController.presentingViewController;
-        HomeViewController *hvc = (HomeViewController *) nvc.topViewController;
-        [hvc dismissViewControllerAnimated:YES completion:^{
-            [hvc.tableView reloadData];
-        }];
+        [self.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:^{}];
     }];
 }
 

@@ -7,7 +7,6 @@
 //
 
 #import "EditStringViewController.h"
-#import "HomeViewController.h"
 #import "RankClient.h"
 
 @interface EditStringViewController ()
@@ -57,16 +56,14 @@
     // Dispose of any resources that can be recreated.
 }
 - (IBAction)dismissEditString:(id)sender {
-    [self.navigationController.presentingViewController dismissModalViewControllerAnimated:YES];
+    [self.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:^{}];
 }
+
 - (IBAction)confirmEditString:(id)sender {
+    self.navigationItem.rightBarButtonItem.enabled = NO;
     [self.item setObject:self.textView.text forKey:@"S"];
     [RankClient updateItem:[self.item objectForKey:@"K"] withString:[self.item objectForKey:@"S"] withHandler:^() {
-        UINavigationController *nvc = (UINavigationController *) self.navigationController.presentingViewController;
-        HomeViewController *hvc = (HomeViewController *) nvc.topViewController;
-        [hvc dismissViewControllerAnimated:YES completion:^{
-            [hvc.tableView reloadData];
-        }];
+        [self.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:^{}];
     }];
 }
 

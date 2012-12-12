@@ -7,6 +7,24 @@
 */
 "DONE" = "完成";
 
+"CANCEL" = "取消";
+
+"COPYED" = "信息复制成功";
+
+"WARNING" = "夏老师提醒：请亲自确认信息真伪，谨防诈骗，一切后果自负。";
+
+"GOTEL" = "拨打电话";
+
+"GOSMS" = "发送短信";
+
+"GOFACETIME" = "视频通话";
+
+"GOEMAIL" = "发送邮件";
+
+"GOALIPAY" = "使用支付宝";
+
+"DOWNLOADALIPAY" = "下载支付宝";
+
 "ADD" = "添加";
 
 "MYINFO" = "个人信息";
@@ -41,9 +59,11 @@
 
 "PHONE" = "手机";
 
-"EMAIL" = "Email";
+"EMAIL" = "电子邮箱";
 
 "FACETIME" = "FaceTime";
+
+"ALIPAY" = "支付宝";
 
 "SINAWEIBO" = "新浪微博";
 

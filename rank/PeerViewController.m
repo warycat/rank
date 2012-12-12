@@ -10,6 +10,7 @@
 #import "RankClient.h"
 #import "CoverFlowViewController.h"
 #import "NewMessageViewController.h"
+#import "BlockAlertView.h"
 
 @interface PeerViewController ()
 @property (strong, nonatomic) NSMutableArray *items;
@@ -118,6 +119,9 @@
 
 - (BOOL)hasActionWithKey:(NSString *)key
 {
+    if ([self.peer isEqualToString:[RankClient peer]]) {
+        return NO;
+    }
     if ([key isEqualToString:@"EMAIL"]) {
         return YES;
     }
@@ -125,6 +129,9 @@
         return YES;
     }
     if ([key isEqualToString:@"FACETIME"]) {
+        return YES;
+    }
+    if ([key isEqualToString:@"ALIPAY"]) {
         return YES;
     }
     return NO;
@@ -132,19 +139,37 @@
 
 - (void)performActionWithKey:(NSString *)key andValue:(NSString *)value
 {
-    NSURL *URL = nil;
+    UIApplication * app = [UIApplication sharedApplication];
+    BlockAlertView *alertView = [[BlockAlertView alloc]initWithTitle:NSLocalizedString(@"COPYED", nil)
+                                                             message:NSLocalizedString(@"WARNING", nil)];
+    [alertView setCancelButtonWithTitle:NSLocalizedString(@"CANCEL",nil) block:nil];
     if ([key isEqualToString:@"EMAIL"]) {
-        URL = [NSURL URLWithString:[NSString stringWithFormat:@"mailto://%@",value]];
+        [alertView addButtonWithTitle:NSLocalizedString(@"GOEMAIL",nil) block:^{
+            [app openURL:[NSURL URLWithString:[NSString stringWithFormat:@"mailto://%@",value]]];
+        }];
     }
     if ([key isEqualToString:@"PHONE"]) {
-        URL = [NSURL URLWithString:[NSString stringWithFormat:@"tel://%@",value]];
+        [alertView addButtonWithTitle:NSLocalizedString(@"GOTEL",nil) block:^{
+            [app openURL:[NSURL URLWithString:[NSString stringWithFormat:@"tel://%@",value]]];
+        }];
+        [alertView addButtonWithTitle:NSLocalizedString(@"GOSMS",nil) block:^{
+            [app openURL:[NSURL URLWithString:[NSString stringWithFormat:@"sms://%@",value]]];
+        }];
     }
     if ([key isEqualToString:@"FACETIME"]) {
-        URL = [NSURL URLWithString:[NSString stringWithFormat:@"facetime://%@",value]];
+        [alertView addButtonWithTitle:NSLocalizedString(@"GOFACETIME",nil) block:^{
+            [app openURL:[NSURL URLWithString:[NSString stringWithFormat:@"facetime://%@",value]]];
+        }];
     }
-    if (URL) {
-        [[UIApplication sharedApplication]openURL:URL];
+    if ([key isEqualToString:@"ALIPAY"]) {
+        [alertView addButtonWithTitle:NSLocalizedString(@"DOWNLOADALIPAY",nil) block:^{
+            [app openURL:[NSURL URLWithString:@"https://itunes.apple.com/cn/app/id333206289"]];
+        }];
+        [alertView addButtonWithTitle:NSLocalizedString(@"GOALIPAY",nil) block:^{
+            [app openURL:[NSURL URLWithString:[NSString stringWithFormat:@"alipay://"]]];
+        }];
     }
+    [alertView show];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)orientation

@@ -136,6 +136,9 @@ static SystemSoundID Tink;
     if ([userInfo objectForKey:@"authToken"]) {
         [RankClient sharedClient].authToken = [userInfo objectForKey:@"authToken"];
         [RankClient playSound:@"Glass"];
+        [[NSNotificationCenter defaultCenter] postNotificationName:RANK_NOTIFICATION
+                                                            object:nil
+                                                          userInfo:@{@"key":@"authToken",@"value":[userInfo objectForKey:@"authToken"]}];
     }
     if ([userInfo objectForKey:@"message"]) {
         [RankClient playSound:@"Submarine"];
@@ -192,7 +195,7 @@ static SystemSoundID Tink;
         [string appendFormat:@"%@=%@&",key,urlEncoded];
     }
     NSLog(@"%@",string);
-    [RankClient playSound:@"Pop"];
+//    [RankClient playSound:@"Pop"];
     return [NSURL URLWithString:string];
 }
 

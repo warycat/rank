@@ -7,7 +7,6 @@
 //
 
 #import "EditSexViewController.h"
-#import "HomeViewController.h"
 #import "RankClient.h"
 
 @interface EditSexViewController ()
@@ -69,17 +68,14 @@
 }
 
 - (IBAction)dismissEditSex:(id)sender {
-    [self.navigationController.presentingViewController dismissModalViewControllerAnimated:YES];
+    [self.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:^{}];
 }
 
 - (IBAction)confirmEditSex:(id)sender {
+    self.navigationItem.rightBarButtonItem.enabled = NO;
     [self.item setObject:self.sex forKey:@"S"];
     [RankClient updateItem:[self.item objectForKey:@"K"] withString:[self.item objectForKey:@"S"] withHandler:^() {
-        UINavigationController *nvc = (UINavigationController *) self.navigationController.presentingViewController;
-        HomeViewController *hvc = (HomeViewController *) nvc.topViewController;
-        [hvc dismissViewControllerAnimated:YES completion:^{
-            [hvc.tableView reloadData];
-        }];
+        [self.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:^{}];
     }];
 }
 

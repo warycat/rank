@@ -77,7 +77,19 @@
 {
     [super viewDidLoad];
     self.title = self.college;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
     [self loadBlogs];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+//    self.blogs = nil;
+//    [self.tableView reloadData];
 }
 
 - (void)didReceiveMemoryWarning

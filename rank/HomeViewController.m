@@ -19,6 +19,8 @@
 @property (strong, nonatomic) NSMutableArray *items;
 @property (strong, nonatomic) NSMutableArray *photos;
 @property (strong, nonatomic) NSMutableDictionary *item;
+@property (strong, nonatomic) NSArray *itemKeys;
+@property (strong, nonatomic) NSDictionary *identifiers;
 @end
 
 @implementation HomeViewController
@@ -26,6 +28,47 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.itemKeys = @[
+        @"NICKNAME",
+        @"SEX",
+        @"BIRTHDAY",
+        @"PHONE",
+        @"FACETIME",
+        @"EMAIL",
+        @"ALIPAY",
+    
+        @"CITY",
+        @"COLLEGE",
+        @"COMPANY",
+        @"PROFESSION",
+        @"HOBBY",
+    
+        @"QQ",
+        @"SINAWEIBO",
+        @"RENREN",
+        @"DOUBAN",
+    ];
+    self.identifiers = @{
+        @"NICKNAME":@"EditStringSegue",
+        @"SEX":@"EditSexSegue",
+        @"BIRTHDAY":@"EditDateSegue",
+        @"PHONE":@"EditStringSegue",
+        @"EMAIL":@"EditStringSegue",
+        @"FACETIME":@"EditStringSegue",
+        @"ALIPAY":@"EditStringSegue",
+    
+        @"CITY":@"EditStringSegue",
+        @"COLLEGE":@"EditStringSegue",
+        @"COMPANY":@"EditStringSegue",
+        @"PROFESSION":@"EditStringSegue",
+        @"HOBBY":@"EditStringSegue",
+    
+        @"QQ":@"EditStringSegue",
+        @"SINAWEIBO":@"EditStringSegue",
+        @"RENREN":@"EditStringSegue",
+        @"DOUBAN":@"EditStringSegue",
+    };
+
     self.tableView.allowsSelectionDuringEditing = YES;
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(observeNotification:) name:RANK_NOTIFICATION object:nil];
     [self loadPeer];
@@ -39,6 +82,7 @@
 - (void)loadPeer
 {
     self.navigationItem.rightBarButtonItem.enabled = NO;
+    self.editing = NO;
     [RankClient getPeerWithPeer:[RankClient peer] withHandler:^(NSMutableArray *items, NSMutableArray *photos) {
         self.items = items;
         self.photos = photos;
@@ -62,6 +106,9 @@
             [self loadPeer];
         }
     }
+    if ([key isEqualToString:@"authToken"]) {
+        [self loadPeer];
+    }
 }
 
 
@@ -82,6 +129,7 @@
         [self.items removeObjectIdenticalTo:self.item];
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
         [self.tableView setEditing:NO animated:YES];
+        [self loadPeer];
     }else{
         self.navigationItem.rightBarButtonItem.title = NSLocalizedString(@"DONE", nil);
         self.item = [NSMutableDictionary dictionaryWithDictionary:@{
@@ -195,27 +243,9 @@
     NSIndexPath *cIndexPath = [indexPath copy];
     NSMutableDictionary *newItem = [NSMutableDictionary dictionaryWithObjects:@[@"",@"",@""]
                                                                       forKeys:@[@"K",@"S",@"N"]];;
-    NSArray *newItemKeys = @[
-        @"NICKNAME",
-        @"SEX",
-        @"BIRTHDAY",
-        @"PHONE",
-        @"FACETIME",
-        @"EMAIL",
 
-        @"CITY",
-        @"COLLEGE",
-        @"COMPANY",
-        @"PROFESSION",
-        @"HOBBY",
-    
-        @"QQ",
-        @"SINAWEIBO",
-        @"RENREN",
-        @"DOUBAN",
-    ];
     BOOL find;
-    for (NSString *newItemKey in newItemKeys) {
+    for (NSString *newItemKey in self.itemKeys) {
         find = NO;
         for (NSMutableDictionary *item in self.items) {
             NSString *itemKey = [item objectForKey:@"K"];
@@ -254,24 +284,7 @@
             [self insertNewItemAtIndexPath:indexPath];
         }else{
             NSString *key = [item objectForKey:@"K"];
-            NSDictionary *identifiers = @{
-            @"NICKNAME":@"EditStringSegue",
-            @"SEX":@"EditSexSegue",
-            @"BIRTHDAY":@"EditDateSegue",
-            @"CITY":@"EditStringSegue",
-            @"COLLEGE":@"EditStringSegue",
-            @"COMPANY":@"EditStringSegue",
-            @"PROFESSION":@"EditStringSegue",
-            @"HOBBY":@"EditStringSegue",
-            @"QQ":@"EditStringSegue",
-            @"PHONE":@"EditStringSegue",
-            @"EMAIL":@"EditStringSegue",
-            @"FACETIME":@"EditStringSegue",
-            @"SINAWEIBO":@"EditStringSegue",
-            @"RENREN":@"EditStringSegue",
-            @"DOUBAN":@"EditStringSegue",
-            };
-            NSString *identifier = [identifiers objectForKey:key];
+            NSString *identifier = [self.identifiers objectForKey:key];
             if (identifier) {
                 [self performSegueWithIdentifier:identifier sender:indexPath];
             }else{

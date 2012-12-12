@@ -10,4 +10,7 @@
 
 @interface RankViewController : UITableViewController <UISearchBarDelegate, UISearchDisplayDelegate>
 
+@property (strong, nonatomic) NSDictionary *ranks;
+@property (strong, nonatomic) NSArray *colleges;
+@property (readwrite) BOOL searching;
 @end

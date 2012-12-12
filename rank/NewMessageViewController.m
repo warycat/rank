@@ -25,6 +25,7 @@
 
 - (IBAction)sendMessage:(id)sender {
     NSString *message = self.textView.text;
+    self.navigationItem.rightBarButtonItem.enabled = NO;
     [RankClient sendMessage:message toPeer:self.peer withHandler:^() {
         [self.navigationController popViewControllerAnimated:YES];
         [RankClient processRemoteNotification:@{@"refresh":@"DismissNewMessage"}];

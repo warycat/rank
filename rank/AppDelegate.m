@@ -50,9 +50,11 @@
         [RankClient processRemoteNotification:remoteNotification];
     }
     
-    [[UINavigationBar appearance]setTintColor:[UIColor orangeColor]];
-    [[UIToolbar appearance]setTintColor:[UIColor orangeColor]];
-    [[UISearchBar appearance]setTintColor:[UIColor orangeColor]];
+    [[UINavigationBar appearance]setTintColor:[UIColor darkGrayColor]];
+    [[UIToolbar appearance]setTintColor:[UIColor darkGrayColor]];
+    [[UISearchBar appearance]setTintColor:[UIColor darkGrayColor]];
+    [[UITabBar appearance]setTintColor:[UIColor darkGrayColor]];
+    //[[UITabBar appearance]setSelectedImageTintColor:[UIColor whiteColor]];
     // Override point for customization after application launch.
     return YES;
 }

@@ -55,6 +55,12 @@
         if (peers.count) {
             NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:@"T" ascending:NO];
             self.peers = [peers sortedArrayUsingDescriptors:@[descriptor]];
+            NSInteger sum = 0;
+            for (NSDictionary *peer in self.peers) {
+                NSNumber *I = [peer objectForKey:@"I"];
+                sum += I.integerValue;
+            }
+            self.navigationController.tabBarItem.badgeValue = (sum?[NSString stringWithFormat:@"%d",sum]:nil);
             self.navigationItem.rightBarButtonItem.enabled = YES;
         }else{
             NSDictionary *nopeer = @{@"M":NSLocalizedString(@"NOPEER", nil),@"T":[NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]],@"P":[RankClient peer]};
@@ -67,9 +73,22 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self loadPeers];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(observeNotification:) name:RANK_NOTIFICATION object:nil];
     self.navigationItem.rightBarButtonItem.enabled = NO;
+    [self loadPeers];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [self loadPeers];
+    [super viewWillAppear:animated];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+//    self.peers = nil;
+//    [self.tableView reloadData];
 }
 
 - (void)dealloc
@@ -116,11 +135,11 @@
     NSNumber *O = [peer objectForKey:@"O"];
     if (I.integerValue || O.integerValue) {
         if (I.integerValue) {
-            cell.badgeColor = [UIColor purpleColor];
+            cell.badgeColor = [UIColor redColor];
             cell.badgeString = I.stringValue;
         }
         if (O.integerValue) {
-            cell.badgeColor = [UIColor orangeColor];
+            cell.badgeColor = [UIColor lightGrayColor];
             cell.badgeString = O.stringValue;
         }
     }else{

@@ -14,11 +14,7 @@
 
 @interface RankViewController ()
 
-@property (strong, nonatomic)NSDictionary *ranks;
-@property (strong, nonatomic)NSArray *states;
-@property (strong, nonatomic)NSArray *colleges;
 @property (strong, nonatomic)NSMutableArray *filteredColleges;
-@property (strong, nonatomic)NSDictionary *index;
 @property (strong, nonatomic)NSMutableDictionary *filteredIndex;
 
 @end
@@ -28,40 +24,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    NSURL *ranksURL = [[NSBundle mainBundle] URLForResource:@"list" withExtension:@"json"];
-    NSData *ranksData = [NSData dataWithContentsOfURL:ranksURL];
-    self.ranks = [NSJSONSerialization JSONObjectWithData:ranksData
-                                                 options:NSJSONReadingMutableLeaves error:nil];
-    NSURL *statesURL = [[NSBundle mainBundle] URLForResource:@"states" withExtension:@"json"];
-    NSData *statesData = [NSData dataWithContentsOfURL:statesURL];
-    self.states = [NSJSONSerialization JSONObjectWithData:statesData
-                                                  options:NSJSONReadingMutableLeaves error:nil];
-    self.colleges = self.ranks.allKeys;
-    self.colleges = [self.colleges sortedArrayUsingSelector:@selector(compare:)];
     self.filteredColleges = [NSMutableArray array];
-    self.index = [self generateIndexForColleges:self.colleges];
+    [self.searchDisplayController setActive:self.searching animated:NO];
 }
 
-- (NSMutableDictionary *)generateIndexForColleges:(NSArray *)colleges
-{
-    NSMutableDictionary *index = [NSMutableDictionary dictionary];
-    NSMutableSet *set = [NSMutableSet set];
-    for (NSString *college in colleges) {
-        NSArray *details = [self.ranks objectForKey:college];
-        NSString *state = [details objectAtIndex:0];
-        [set addObject:state];
-    }
-    for (NSString *state in set) {
-        [index setObject:[NSMutableArray array] forKey:state];
-    }
-    for (NSString *college in colleges) {
-        NSArray *details = [self.ranks objectForKey:college];
-        NSString *state = [details objectAtIndex:0];
-        NSMutableArray *stateColleges = [index objectForKey:state];
-        [stateColleges addObject:college];
-    }
-    return index;
-}
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -80,15 +47,19 @@
         cvc.details = [self.ranks objectForKey:college];
         return;
     }
-    if ([segue.identifier isEqualToString:@"HomeSegue"]) {
-        NSLog(@"%@",segue.identifier);
-        return;
-    }
     if ([segue.identifier isEqualToString:@"CollegeBlogsSegue"]) {
         NSLog(@"%@",segue.identifier);
         CollegeBlogsViewController *cbvc = segue.destinationViewController;
         NSString *college = sender;
-        [[NSUserDefaults standardUserDefaults]setObject:college forKey:@"BookmarkedCollege"];
+//        [[NSUserDefaults standardUserDefaults]setObject:college forKey:@"BookmarkedCollege"];
+        NSMutableDictionary *history = [[NSUserDefaults standardUserDefaults]objectForKey:@"VisitedColleges"];
+        if (!history) {
+            history = [NSMutableDictionary dictionary];
+        }else{
+            history = [history mutableCopy];
+        }
+        [history setObject:[NSDate date] forKey:college];
+        [[NSUserDefaults standardUserDefaults]setObject:history forKey:@"VisitedColleges"];
         cbvc.college = college;
         return;
     }
@@ -108,7 +79,8 @@
     }
 	else
 	{
-        return self.states.count;
+        return 1;
+        //return self.states.count;
     }
 }
 
@@ -123,9 +95,11 @@
     }
 	else
 	{
-        NSString *state = [[self.states objectAtIndex:section] objectAtIndex:0];
-        NSArray *stateColleges = [self.index objectForKey:state];
-        return stateColleges.count;
+//        NSArray *colleges = [self.index objectForKey:self.state];
+        return self.colleges.count;
+//        NSString *state = [[self.states objectAtIndex:section] objectAtIndex:0];
+//        NSArray *stateColleges = [self.index objectForKey:state];
+//        return stateColleges.count;
     }
 }
 
@@ -137,41 +111,42 @@
     }
 	else
 	{
-        NSArray *state = [self.states objectAtIndex:section];
-        NSString *s = [state objectAtIndex:0];
-        return s;
-    }
-}
-
-- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView
-{
-    if (tableView == self.searchDisplayController.searchResultsTableView) {
         return nil;
-    }
-    else
-    {
-        NSMutableArray *indexTitles = [NSMutableArray array];
-        for (NSArray *state in self.states) {
-            [indexTitles addObject:[state objectAtIndex:1]];
-        }
-        return indexTitles;
+//        NSArray *state = [self.states objectAtIndex:section];
+//        NSString *s = [state objectAtIndex:0];
+//        return s;
     }
 }
 
-- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index
-{
-    if (tableView == self.searchDisplayController.searchResultsTableView) {
-        return 0;
-    }
-    else
-    {
-        return index;
-    }
-}
+//- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView
+//{
+//    if (tableView == self.searchDisplayController.searchResultsTableView) {
+//        return nil;
+//    }
+//    else
+//    {
+//        NSMutableArray *indexTitles = [NSMutableArray array];
+//        for (NSArray *state in self.states) {
+//            [indexTitles addObject:[state objectAtIndex:1]];
+//        }
+//        return indexTitles;
+//    }
+//}
+
+//- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index
+//{
+//    if (tableView == self.searchDisplayController.searchResultsTableView) {
+//        return 0;
+//    }
+//    else
+//    {
+//        return index;
+//    }
+//}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Rank Cell";
+    static NSString *CellIdentifier = @"RankCell";
     UITableViewCell *cell;
     cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
@@ -182,9 +157,11 @@
     }
 	else
 	{
-        NSArray *state = [self.states objectAtIndex:indexPath.section];
-        NSArray *stateColleges = [[self.index objectForKey:[state objectAtIndex:0]] sortedArrayUsingSelector:@selector(compare:)];
-        college = [stateColleges objectAtIndex:indexPath.row];
+        
+//        NSArray *stateColleges = [[self.index objectForKey:self.state]sortedArrayUsingSelector:@selector(compare:)];
+//        NSArray *state = [self.states objectAtIndex:indexPath.section];
+//        NSArray *stateColleges = [[self.index objectForKey:[state objectAtIndex:0]] sortedArrayUsingSelector:@selector(compare:)];
+        college = [self.colleges objectAtIndex:indexPath.row];
     }
     cell.textLabel.text = college;
     return cell;
@@ -199,9 +176,10 @@
     }
 	else
 	{
-        NSArray *state = [self.states objectAtIndex:indexPath.section];
-        NSArray *stateColleges = [[self.index objectForKey:[state objectAtIndex:0]] sortedArrayUsingSelector:@selector(compare:)];
-        college = [stateColleges objectAtIndex:indexPath.row];
+        college = [self.colleges objectAtIndex:indexPath.row];
+//        NSArray *state = [self.states objectAtIndex:indexPath.section];
+//        NSArray *stateColleges = [[self.index objectForKey:[state objectAtIndex:0]] sortedArrayUsingSelector:@selector(compare:)];
+//        college = [stateColleges objectAtIndex:indexPath.row];
     }
     [self performSegueWithIdentifier:@"CollegeBlogsSegue" sender:college];
 }
@@ -215,9 +193,10 @@
     }
 	else
 	{
-        NSArray *state = [self.states objectAtIndex:indexPath.section];
-        NSArray *stateColleges = [[self.index objectForKey:[state objectAtIndex:0]] sortedArrayUsingSelector:@selector(compare:)];
-        college = [stateColleges objectAtIndex:indexPath.row];
+        college = [self.colleges objectAtIndex:indexPath.row];
+//        NSArray *state = [self.states objectAtIndex:indexPath.section];
+//        NSArray *stateColleges = [[self.index objectForKey:[state objectAtIndex:0]] sortedArrayUsingSelector:@selector(compare:)];
+//        college = [stateColleges objectAtIndex:indexPath.row];
     }
     [self performSegueWithIdentifier:@"CollegeSegue" sender:college];
 }
@@ -305,12 +284,12 @@
         return YES;
     }
 }
-- (void)searchBarBookmarkButtonClicked:(UISearchBar *)searchBar
-{
-    NSString *college = [[NSUserDefaults standardUserDefaults]stringForKey:@"BookmarkedCollege"];
-    if (college) {
-        [self performSegueWithIdentifier:@"CollegeBlogsSegue" sender:college];
-    }
-}
+//- (void)searchBarBookmarkButtonClicked:(UISearchBar *)searchBar
+//{
+//    NSString *college = [[NSUserDefaults standardUserDefaults]stringForKey:@"BookmarkedCollege"];
+//    if (college) {
+//        [self performSegueWithIdentifier:@"CollegeBlogsSegue" sender:college];
+//    }
+//}
 
 @end
