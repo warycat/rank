@@ -37,10 +37,25 @@
     }
 }
 
+- (void)observeNotification:(NSNotification *)notification
+{
+    NSString *key = [notification.userInfo objectForKey:@"key"];
+    //NSString *value = [notification.userInfo objectForKey:@"value"];
+    if ([key isEqualToString:@"authToken"]) {
+        [self reloadData];
+    }
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(observeNotification:) name:RANK_NOTIFICATION object:nil];
     [self reloadData];
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
 
 - (void)reloadData
@@ -196,7 +211,9 @@
 
 - (IBAction)goBack:(id)sender {
     [self.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:^{
-        [self.tvc.tableView reloadRowsAtIndexPaths:@[self.indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+        if (self.tvc && self.indexPath) {
+            [self.tvc.tableView reloadRowsAtIndexPaths:@[self.indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+        }
     }];
 }
 

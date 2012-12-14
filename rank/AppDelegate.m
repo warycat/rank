@@ -9,6 +9,8 @@
 #import "AppDelegate.h"
 #import "RankClient.h"
 #import "WebViewController.h"
+#import "PeerViewController.h"
+#import "Appirater.h"
 
 @implementation AppDelegate
 
@@ -19,21 +21,26 @@
 - (void)observeNotification:(NSNotification *)notification
 {
     NSLog(@"%@",notification);
-    if (![[notification.userInfo objectForKey:@"key"]isEqualToString:@"url"]) {
-        return;
-    }
-    NSString *url = [notification.userInfo objectForKey:@"value"];
-    if (!url) {
-        return;
-    }
-    UIStoryboard *sb = [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone" bundle:[NSBundle mainBundle]];
-    WebViewController *wvc = [sb instantiateViewControllerWithIdentifier:@"WebViewController"];
-    wvc.URLString = url;
+    NSString *key = [notification.userInfo objectForKey:@"key"];
+    NSString *value = [notification.userInfo objectForKey:@"value"];
     UIViewController *vc = self.window.rootViewController;
     while (vc.presentedViewController) {
         vc = vc.presentedViewController;
     }
-    [vc presentModalViewController:wvc animated:NO];
+    UIStoryboard *sb = [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone" bundle:[NSBundle mainBundle]];
+    if ([key isEqualToString:@"url"] && value) {
+        WebViewController *wvc = [sb instantiateViewControllerWithIdentifier:@"WebViewController"];
+        wvc.URLString = value;
+        [vc presentModalViewController:wvc animated:NO];
+    }
+    if ([key isEqualToString:@"peer"] && value) {
+        NSLog(@"%@",value);
+        UINavigationController *nvc = [sb instantiateViewControllerWithIdentifier:@"PeerNavigationController"];
+        PeerViewController *pvc = (PeerViewController *) nvc.topViewController;
+        pvc.peer = value;
+        [vc presentModalViewController:nvc animated:NO];
+    }
+
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -54,6 +61,8 @@
     [[UIToolbar appearance]setTintColor:[UIColor darkGrayColor]];
     [[UISearchBar appearance]setTintColor:[UIColor darkGrayColor]];
     [[UITabBar appearance]setTintColor:[UIColor darkGrayColor]];
+    [Appirater setAppId:@"570966012"];
+    [Appirater appLaunched:YES];
     //[[UITabBar appearance]setSelectedImageTintColor:[UIColor whiteColor]];
     // Override point for customization after application launch.
     return YES;
@@ -70,6 +79,12 @@
 {
 	NSLog(@"Failed to get token, error: %@", error);
     abort();
+}
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    [RankClient processRemoteNotification:@{@"peer":[url query]}];
+    return YES;
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
@@ -91,6 +106,7 @@
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
+    [Appirater appEnteredForeground:YES];
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
 }
 

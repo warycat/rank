@@ -78,19 +78,6 @@
     [self loadPeers];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [self loadPeers];
-    [super viewWillAppear:animated];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-//    self.peers = nil;
-//    [self.tableView reloadData];
-}
-
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter]removeObserver:self];
@@ -200,6 +187,9 @@
         if ([value isEqualToString:@"DismissNewMessage"]) {
             [self loadPeers];
         }
+    }
+    if ([key isEqualToString:@"authToken"]) {
+        [self loadPeers];
     }
 }
 

@@ -11,6 +11,28 @@
 
 #define RANK_NOTIFICATION @"RankNotification"
 
+#ifdef DEBUG
+#define BASE_URL @"http://dev.warycat.com"
+#else
+#define BASE_URL @"http://aws.warycat.com"
+#endif
+
+#define APP_URL @"/rank"
+#define COMMENT_URL @"/comment.php"
+#define REGISTER_PHP @"/register.php"
+#define SUBMIT_BLOG_PHP @"/submit_blog.php"
+#define QUERY_BLOGS_PHP @"/query_blogs.php"
+#define UPDATE_BLOG_PHP @"/update_blog.php"
+#define GET_PEER_PHP @"/get_peer.php"
+#define QUERY_PEERS_PHP @"/query_peers.php"
+#define QUERY_MESSAGES_PHP @"/query_messages.php"
+#define UPDATE_PEER_PHP @"/update_peer.php"
+#define UPLOAD_PHOTO_PHP @"/upload_photo.php"
+#define SEND_MESSAGE_PHP @"/send_message.php"
+#define DELETE_PHOTO_PHP @"/delete_photo.php"
+#define UPDATE_RELATION_PHP @"/update_relation.php"
+#define PHOTO_URL @"http://s3-us-west-1.amazonaws.com/california.com.warycat.rank.photo/"
+
 @interface RankClient : NSObject <CLLocationManagerDelegate>
 
 @property (nonatomic, strong) NSData *deviceToken;

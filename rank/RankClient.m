@@ -12,29 +12,7 @@
 #import <CommonCrypto/CommonHMAC.h>
 #import <AudioToolbox/AudioToolbox.h>
 #import "AppDelegate.h"
-
-#ifdef DEBUG
-    #define BASE_URL @"http://dev.warycat.com"
-#else
-    #define BASE_URL @"http://aws.warycat.com"
-#endif
-
-#define APP_URL @"/rank"
-#define COMMENT_URL @"/comment.php"
-#define REGISTER_PHP @"/register.php"
-#define SUBMIT_BLOG_PHP @"/submit_blog.php"
-#define QUERY_BLOGS_PHP @"/query_blogs.php"
-#define UPDATE_BLOG_PHP @"/update_blog.php"
-#define GET_PEER_PHP @"/get_peer.php"
-#define QUERY_PEERS_PHP @"/query_peers.php"
-#define QUERY_MESSAGES_PHP @"/query_messages.php"
-#define UPDATE_PEER_PHP @"/update_peer.php"
-#define UPLOAD_PHOTO_PHP @"/upload_photo.php"
-#define SEND_MESSAGE_PHP @"/send_message.php"
-#define DELETE_PHOTO_PHP @"/delete_photo.php"
-#define UPDATE_RELATION_PHP @"/update_relation.php"
-#define PHOTO_URL @"http://s3-us-west-1.amazonaws.com/california.com.warycat.rank.photo/"
-
+#import "BlockAlertView.h"
 
 static SystemSoundID Basso;
 static SystemSoundID Blow;
@@ -162,6 +140,11 @@ static SystemSoundID Tink;
                                                             object:nil
                                                           userInfo:@{@"key":@"refresh",@"value":[userInfo objectForKey:@"refresh"]}];
     }
+    if ([userInfo objectForKey:@"peer"]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:RANK_NOTIFICATION
+                                                            object:nil
+                                                          userInfo:@{@"key":@"peer",@"value":[userInfo objectForKey:@"peer"]}];
+    }
 }
 
 
@@ -176,6 +159,13 @@ static SystemSoundID Tink;
 + (NSURL *)URLwithPHP:(NSString *)php andDictionary:(NSDictionary *)dict
 {
     NSMutableDictionary *GET = [NSMutableDictionary dictionaryWithDictionary:dict];
+    if (![RankClient peer]) {
+        BlockAlertView *alertView = [[BlockAlertView alloc]initWithTitle:NSLocalizedString(@"SIGNIN", nil)
+                                                                 message:nil];
+        [alertView setCancelButtonWithTitle:NSLocalizedString(@"OK",nil) block:^{}];
+        [alertView show];
+        return nil;
+    }
     [GET setObject:[RankClient peer] forKey:@"deviceToken"];
     [GET setObject:[NSString stringWithFormat:@"%f",[[NSDate date] timeIntervalSince1970]] forKey:@"timestamp"];
     if (dict) {
@@ -214,18 +204,24 @@ static SystemSoundID Tink;
         NSLog(@"%@",error);
         return nil;
     }
-    
-    if (httpResponse.statusCode != 200){
+    if (httpResponse.statusCode == 400){
         error = [NSError errorWithDomain:@"RANK_STATUS_CODE_ERROR" code:httpResponse.statusCode userInfo:nil];
         NSLog(@"%@",object);
         [RankClient playSound:@"Sosumi"];
         return nil;
     }
-    if (httpResponse.statusCode == 401) {
-        [RankClient registerPeerWithToken:[RankClient sharedClient].deviceToken withHandler:^(){}];
+    if (httpResponse.statusCode == 300) {
+        BlockAlertView *alertView = [[BlockAlertView alloc]initWithTitle:NSLocalizedString(@"SIGNIN", nil)
+                                                                 message:nil];
+        [alertView setCancelButtonWithTitle:NSLocalizedString(@"OK",nil) block:^{}];
+        [alertView show];
+        return nil;
     }
-    [RankClient playSound:@"Tink"];
-    return object;
+    if (httpResponse.statusCode == 200) {
+        [RankClient playSound:@"Tink"];
+        return object;
+    }
+    return nil;
 }
 
 + (void)registerPeerWithToken:(NSData *)token withHandler:(void(^)())handler

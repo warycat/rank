@@ -1,3 +1,4 @@
 /* Localized versions of Info.plist keys */
 
 CFBundleDisplayName = "大学微博微信";
+CFBundleName = "大学微博微信";

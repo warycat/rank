@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ZBarSDK.h"
 
-@interface SettingsViewController : UITableViewController
+@interface SettingsViewController : UITableViewController <ZBarReaderDelegate>
 
 @end
