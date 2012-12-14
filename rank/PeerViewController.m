@@ -154,6 +154,7 @@
 
 - (void)performActionWithKey:(NSString *)key andValue:(NSString *)value
 {
+    [UIPasteboard generalPasteboard].string = value;
     UIApplication * app = [UIApplication sharedApplication];
     BlockAlertView *alertView = [[BlockAlertView alloc]initWithTitle:NSLocalizedString(@"COPYED", nil)
                                                              message:NSLocalizedString(@"WARNING", nil)];

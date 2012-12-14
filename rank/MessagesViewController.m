@@ -148,7 +148,7 @@
 {
     Message *messageObject = [self.fetchedResultsController objectAtIndexPath:indexPath];
     NSString *textString = messageObject.data;
-    UIFont *textFont = [UIFont systemFontOfSize:18.0f];
+    UIFont *textFont = [UIFont fontWithName:@"STHeitiSC-Medium" size:18.0f];
     CGSize textSize = [textString sizeWithFont:textFont constrainedToSize:CGSizeMake(300, CGFLOAT_MAX)];
     CGFloat height = textSize.height + 18.0f + 6.0f;
     return ((height > 44.0)? height : 44.0);

@@ -204,9 +204,15 @@ static SystemSoundID Tink;
         NSLog(@"%@",error);
         return nil;
     }
+    if (httpResponse.statusCode == 500){
+        error = [NSError errorWithDomain:@"RANK_STATUS_CODE_ERROR" code:httpResponse.statusCode userInfo:nil];
+        NSLog(@"500 %@",object);
+        //[RankClient playSound:@"Sosumi"];
+        return nil;
+    }
     if (httpResponse.statusCode == 400){
         error = [NSError errorWithDomain:@"RANK_STATUS_CODE_ERROR" code:httpResponse.statusCode userInfo:nil];
-        NSLog(@"%@",object);
+        NSLog(@"400 %@",object);
         [RankClient playSound:@"Sosumi"];
         return nil;
     }
