@@ -202,6 +202,7 @@ static SystemSoundID Tink;
     if (error) {
         error = [NSError errorWithDomain:@"RANK_JSON_DECODE_ERROR" code:httpResponse.statusCode userInfo:nil];
         NSLog(@"%@",error);
+        NSLog(@"%s",data.bytes);
         return nil;
     }
     if (httpResponse.statusCode == 500){
