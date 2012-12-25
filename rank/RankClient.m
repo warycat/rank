@@ -38,6 +38,9 @@ static SystemSoundID Tink;
 
 @implementation RankClient
 
+
+
+
 - (NSString *)authToken{
     if (_authToken) {
         return _authToken;
@@ -432,6 +435,23 @@ static SystemSoundID Tink;
 }
 
 
++ (void)listFilesWithPrefix:(NSString *)prefix withHandler:(void (^)(NSArray *folders, NSArray *files))handler
+{
+    NSURL *URL = [self URLwithPHP:LIST_FILES_PHP andDictionary:@{@"prefix":prefix}];
+    NSURLRequest *request = [NSURLRequest requestWithURL:URL];
+    [[RankClient sharedClient] networkUp];
+    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+        [[RankClient sharedClient] networkDown];
+        NSDictionary *result = [RankClient processResponse:response withData:data withError:error];
+        if (result) {
+            NSLog(@"list files ok %@",result);
+            NSArray *files = [result objectForKey:@"Files"];
+            NSArray *folders = [result objectForKey:@"Folders"];
+            handler(folders,files);
+        }
+    }];
+}
+
 + (NSURL *)urlWithPhoto:(NSString *)filename
 {
     NSURL *URL = [NSURL URLWithString:PHOTO_URL];
@@ -483,6 +503,7 @@ NSData *hmacForKeyAndData(NSString *key, NSString *data)
     }
     return [UIImage imageNamed:@"Sex-Male-Female-icon.png"];
 }
+
 
 
 @end

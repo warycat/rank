@@ -130,7 +130,7 @@
         CLLocation *location = [[CLLocation alloc]initWithLatitude:latitude.doubleValue longitude:longitude.doubleValue];
         CLLocationDistance distance = [location distanceFromLocation:[RankClient sharedClient].locationManager.location];
         detailString = [NSString stringWithFormat:@"%@",detailString];
-        cell.badgeString = [NSString stringWithFormat:@"%.0f m",distance];
+        cell.badgeString = [self unitStringFromDistance:distance];
         cell.badgeColor = [UIColor orangeColor];
     }
     cell.detailTextLabel.text = detailString;
@@ -183,6 +183,26 @@
     }else{
         return YES;
     }
+}
+
+- (NSString*) unitStringFromDistance:(double) distance
+{
+    
+    static const char units[] = { '\0', 'k', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y' };
+    static int maxUnits = sizeof units - 1;
+    
+    int multiplier = 1000;
+    int exponent = 0;
+    
+    while (distance >= multiplier && exponent < maxUnits) {
+        distance /= multiplier;
+        exponent++;
+    }
+    NSNumberFormatter* formatter = [[NSNumberFormatter alloc] init];
+    [formatter setMaximumFractionDigits:2];
+    [formatter setNumberStyle: NSNumberFormatterDecimalStyle];
+    // Beware of reusing this format string. -[NSString stringWithFormat] ignores \0, *printf does not.
+    return [NSString stringWithFormat:@"%@%c m", [formatter stringFromNumber: [NSNumber numberWithDouble: distance]], units[exponent]];
 }
 
 @end

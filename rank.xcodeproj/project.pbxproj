@@ -48,6 +48,8 @@
 		25165B621678852E0053FC63 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25165B611678852E0053FC63 /* CoreMedia.framework */; };
 		25165B64167885420053FC63 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25165B63167885420053FC63 /* CoreVideo.framework */; };
 		25165B66167885B00053FC63 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 25165B65167885AF0053FC63 /* libiconv.dylib */; };
+		2548AF661688B39500565377 /* Folder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2548AF651688B39500565377 /* Folder@2x.png */; };
+		2548AF6E16894B5200565377 /* ListFilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2548AF6D16894B5200565377 /* ListFilesViewController.m */; };
 		25B074851670380D00495DC6 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B074841670380D00495DC6 /* Message.m */; };
 		25D5B0681664CC13002D2763 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25D5B0671664CC13002D2763 /* UIKit.framework */; };
 		25D5B06A1664CC13002D2763 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25D5B0691664CC13002D2763 /* Foundation.framework */; };
@@ -205,6 +207,9 @@
 		25165B611678852E0053FC63 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		25165B63167885420053FC63 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		25165B65167885AF0053FC63 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
+		2548AF651688B39500565377 /* Folder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Folder@2x.png"; sourceTree = "<group>"; };
+		2548AF6C16894B5200565377 /* ListFilesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListFilesViewController.h; sourceTree = "<group>"; };
+		2548AF6D16894B5200565377 /* ListFilesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListFilesViewController.m; sourceTree = "<group>"; };
 		25B074831670380D00495DC6 /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Message.h; sourceTree = "<group>"; };
 		25B074841670380D00495DC6 /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Message.m; sourceTree = "<group>"; };
 		25D5B0631664CC13002D2763 /* rank.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = rank.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -588,6 +593,7 @@
 				25165AEA16782F170053FC63 /* alert-red-button@2x.png */,
 				25165AEB16782F170053FC63 /* alert-window.png */,
 				25165AEC16782F170053FC63 /* alert-window@2x.png */,
+				2548AF651688B39500565377 /* Folder@2x.png */,
 				25165ADC16773DC10053FC63 /* Gear@2x.png */,
 				25165ADA1676E61C0053FC63 /* Wallet@2x.png */,
 				25165AD81676E44C0053FC63 /* Chats@2x.png */,
@@ -678,6 +684,8 @@
 				25165AD016764A010053FC63 /* StatesViewController.m */,
 				25165ADE167742DA0053FC63 /* SettingsViewController.h */,
 				25165ADF167742DB0053FC63 /* SettingsViewController.m */,
+				2548AF6C16894B5200565377 /* ListFilesViewController.h */,
+				2548AF6D16894B5200565377 /* ListFilesViewController.m */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -843,6 +851,7 @@
 				25165B5D167884730053FC63 /* zbar-helpicons.png in Resources */,
 				25165B5E167884730053FC63 /* zbar-samples.png in Resources */,
 				25E4E20D167A440100A2B79B /* AppiraterLocalizable.strings in Resources */,
+				2548AF661688B39500565377 /* Folder@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -914,6 +923,7 @@
 				25165AD116764A010053FC63 /* StatesViewController.m in Sources */,
 				25165AE0167742DB0053FC63 /* SettingsViewController.m in Sources */,
 				25E4E207167A406700A2B79B /* Appirater.m in Sources */,
+				2548AF6E16894B5200565377 /* ListFilesViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

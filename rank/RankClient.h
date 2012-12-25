@@ -31,6 +31,7 @@
 #define SEND_MESSAGE_PHP @"/send_message.php"
 #define DELETE_PHOTO_PHP @"/delete_photo.php"
 #define UPDATE_RELATION_PHP @"/update_relation.php"
+#define LIST_FILES_PHP @"/list_files.php"
 #define PHOTO_URL @"http://s3-us-west-1.amazonaws.com/california.com.warycat.rank.photo/"
 
 @interface RankClient : NSObject <CLLocationManagerDelegate>
@@ -73,6 +74,8 @@
 + (void)withdrawFromCollege:(NSString *)peer withHandler:(void (^)())handler;
 
 + (void)updateRelation:(NSNumber *)relation withPeer:(NSString *)peer withHandler:(void (^)())handler;
+
++ (void)listFilesWithPrefix:(NSString *)prefix withHandler:(void (^)(NSArray *folders, NSArray *files))handler;
 
 + (NSURL *)urlWithPhoto:(NSString *)filename;
 

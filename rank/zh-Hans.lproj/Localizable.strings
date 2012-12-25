@@ -5,6 +5,10 @@
   Created by Larry on 10/23/12.
   Copyright (c) 2012 warycat.com. All rights reserved.
 */
+"FOLDER" = "文件夹";
+
+"FILE" = "文件";
+
 "SIGNIN" = "设置登录";
 
 "OK" = "确定";
