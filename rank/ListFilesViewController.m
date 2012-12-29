@@ -9,6 +9,7 @@
 #import "ListFilesViewController.h"
 #import "RankClient.h"
 #import "BlockAlertView.h"
+#import "DownloadManagerViewController.h"
 
 @interface ListFilesViewController ()
 
@@ -101,7 +102,7 @@
             static NSString *CellIdentifier = @"FileCell";
             UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
             NSDictionary *file = [self.files objectAtIndex:indexPath.row];
-            cell.textLabel.text = [file objectForKey:@"Key"];
+            cell.textLabel.text = [file objectForKey:@"Name"];
             NSNumber *size = [file objectForKey:@"Size"];
             cell.detailTextLabel.text = [self unitStringFromBytes:size.doubleValue];
             return cell;
@@ -133,12 +134,27 @@
         {
             NSDictionary *file = [self.files objectAtIndex:indexPath.row];
             NSNumber *size = [file objectForKey:@"Size"];
-            NSString *key = [file objectForKey:@"Key"];
+            NSString *name = [file objectForKey:@"Name"];
+            NSString *key = [self.prefix stringByAppendingString:name];
             BlockAlertView *alert = [[BlockAlertView alloc]initWithTitle:NSLocalizedString(@"DOWNLOAD", nil)
                                                                message:key];
             [alert setCancelButtonWithTitle:NSLocalizedString(@"CANCEL", nil) block:^{}];
             [alert addButtonWithTitle:[self unitStringFromBytes:size.doubleValue] block:^{
-                ;
+                
+                [RankClient getFileWithKey:key withHandler:^(NSDictionary *info) {
+                    NSString* ETag = [info objectForKey:@"ETag"];
+                    ETag = [ETag stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\""]];
+                    NSDictionary *userInfo = @{
+                        @"url":[info objectForKey:@"url"],
+                        @"name":name,
+                        @"size":[info objectForKey:@"Size"],
+                        @"md5": ETag,
+                        @"type":[info objectForKey:@"ContentType"],
+                    };
+                    [[NSNotificationCenter defaultCenter]postNotificationName:DOWNLOAD_NOTIFICATION
+                                                                       object:nil
+                                                                     userInfo:userInfo];
+                }];
             }];
             [alert show];
         }
@@ -168,5 +184,6 @@
     // Beware of reusing this format string. -[NSString stringWithFormat] ignores \0, *printf does not.
     return [NSString stringWithFormat:@"%@ %cB", [formatter stringFromNumber: [NSNumber numberWithDouble: bytes]], units[exponent]];
 }
+
 
 @end

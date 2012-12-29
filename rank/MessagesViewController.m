@@ -124,11 +124,7 @@
 {
     static NSString *CellIdentifier = @"MessageCell";
     UITableViewCell *cell;
-    if ([tableView respondsToSelector:@selector(dequeueReusableCellWithIdentifier:forIndexPath:)]) {
-        cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
-    }else{
-        cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    }
+    cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     Message *messageObject = [self.fetchedResultsController objectAtIndexPath:indexPath];
     cell.textLabel.text = messageObject.data;
     NSString *peer = messageObject.from;

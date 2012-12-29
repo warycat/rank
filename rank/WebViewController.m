@@ -11,28 +11,27 @@
 
 @interface WebViewController ()
 @property (weak, nonatomic) IBOutlet UIWebView *webView;
-
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *exitButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *refreshButton;
 @end
 
 @implementation WebViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+
+- (void)play:(id)sender
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
+    NSLog(@"play");
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
     NSURL *URL = [NSURL URLWithString:self.URLString];
     NSURLRequest *request = [NSURLRequest requestWithURL:URL];
     self.webView.delegate = self;
     [self.webView loadRequest:request];
-	// Do any additional setup after loading the view.
+    	// Do any additional setup after loading the view.
 }
 
 - (void)webViewDidStartLoad:(UIWebView *)webView
@@ -66,16 +65,14 @@
 
 - (void)viewDidUnload {
     [self setWebView:nil];
+    [self setRefreshButton:nil];
+    [self setExitButton:nil];
     [super viewDidUnload];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)orientation
 {
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        return (orientation == UIInterfaceOrientationPortrait );
-    }else{
-        return YES;
-    }
+    return YES;
 }
 
 @end

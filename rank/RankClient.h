@@ -32,6 +32,7 @@
 #define DELETE_PHOTO_PHP @"/delete_photo.php"
 #define UPDATE_RELATION_PHP @"/update_relation.php"
 #define LIST_FILES_PHP @"/list_files.php"
+#define GET_FILE_PHP @"/get_file.php"
 #define PHOTO_URL @"http://s3-us-west-1.amazonaws.com/california.com.warycat.rank.photo/"
 
 @interface RankClient : NSObject <CLLocationManagerDelegate>
@@ -61,9 +62,9 @@
 
 + (void)getPeerWithPeer:(NSString *)peer withHandler:(void (^)(NSMutableArray *items, NSMutableArray *photos))handler;
 
-+ (void)queryBlogsInCollege:(NSString *)college WithHandler:(void (^)(NSArray *blogs))handler;
++ (void)queryBlogsInCollege:(NSString *)college withHandler:(void (^)(NSArray *blogs))handler;
 
-+ (void)queryPeersWithPeer:(NSString *)peer WithHandler:(void (^)(NSArray *peers))handler;
++ (void)queryPeersWithPeer:(NSString *)peer withHandler:(void (^)(NSArray *peers))handler;
 
 + (void)queryMessagesWithPeerA:(NSString *)pa
                       andTimeA:(NSNumber *)ta
@@ -76,6 +77,8 @@
 + (void)updateRelation:(NSNumber *)relation withPeer:(NSString *)peer withHandler:(void (^)())handler;
 
 + (void)listFilesWithPrefix:(NSString *)prefix withHandler:(void (^)(NSArray *folders, NSArray *files))handler;
+
++ (void)getFileWithKey:(NSString *)key withHandler:(void (^)(NSDictionary *info))handler;
 
 + (NSURL *)urlWithPhoto:(NSString *)filename;
 

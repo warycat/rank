@@ -14,101 +14,127 @@
 
 #define kKeyboardResizeBounce         20
 
-@interface BlockTextPromptAlertView()
-@property(nonatomic, copy) TextFieldReturnCallBack callBack;
-@end
+#if __IPHONE_OS_VERSION_MAX_ALLOWED < 60000
+#define NSTextAlignmentCenter       UITextAlignmentCenter
+#endif
+
 
 @implementation BlockTextPromptAlertView
-@synthesize textField, callBack;
-
-
-
-+ (BlockTextPromptAlertView *)promptWithTitle:(NSString *)title message:(NSString *)message defaultText:(NSString*)defaultText {
-    return [self promptWithTitle:title message:message defaultText:defaultText block:nil];
-}
-
-+ (BlockTextPromptAlertView *)promptWithTitle:(NSString *)title message:(NSString *)message defaultText:(NSString*)defaultText block:(TextFieldReturnCallBack)block {
-    return [[[BlockTextPromptAlertView alloc] initWithTitle:title message:message defaultText:defaultText block:block] autorelease];
-}
+@synthesize textField;
+@synthesize shouldDismiss;
 
 + (BlockTextPromptAlertView *)promptWithTitle:(NSString *)title message:(NSString *)message textField:(out UITextField**)textField {
-    return [self promptWithTitle:title message:message textField:textField block:nil];
-}
-
-
-+ (BlockTextPromptAlertView *)promptWithTitle:(NSString *)title message:(NSString *)message textField:(out UITextField**)textField block:(TextFieldReturnCallBack) block{
-    BlockTextPromptAlertView *prompt = [[[BlockTextPromptAlertView alloc] initWithTitle:title message:message defaultText:nil block:block] autorelease];
+    
+    BlockTextPromptAlertView *prompt = [[[BlockTextPromptAlertView alloc] initWithTitle:title message:message defaultText:nil] autorelease];
     
     *textField = prompt.textField;
     
     return prompt;
 }
 
-- (id)initWithTitle:(NSString *)title message:(NSString *)message defaultText:(NSString*)defaultText block: (TextFieldReturnCallBack) block {
+- (void)addComponents:(CGRect)frame {
+    [super addComponents:frame];
     
-    self = [super initWithTitle:title message:message];
-    
-    if (self) {
-        UITextField *theTextField = [[[UITextField alloc] initWithFrame:CGRectMake(kTextBoxHorizontalMargin, _height, _view.bounds.size.width - kTextBoxHorizontalMargin * 2, kTextBoxHeight)] autorelease]; 
+    if (!self.textField) {
+        UITextField *theTextField = [[UITextField alloc] initWithFrame:CGRectMake(kTextBoxHorizontalMargin, _height, frame.size.width - kTextBoxHorizontalMargin * 2, kTextBoxHeight)]; 
         
         [theTextField setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
         [theTextField setAutocapitalizationType:UITextAutocapitalizationTypeWords];
         [theTextField setBorderStyle:UITextBorderStyleRoundedRect];
-        [theTextField setTextAlignment:UITextAlignmentCenter];
+        [theTextField setTextAlignment:NSTextAlignmentCenter];
         [theTextField setClearButtonMode:UITextFieldViewModeAlways];
         
-        if (defaultText)
-            theTextField.text = defaultText;
+        theTextField.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         
-        if(block){
-            theTextField.delegate = self;
-        }
-        
-        [_view addSubview:theTextField];
+        theTextField.delegate = self;
         
         self.textField = theTextField;
+    }
+    else {
+        self.textField.frame = CGRectMake(kTextBoxHorizontalMargin, _height, frame.size.width - kTextBoxHorizontalMargin * 2, kTextBoxHeight);
+    }
+    
+    [_view addSubview:self.textField];
+    _height += kTextBoxHeight + kTextBoxSpacing;
+
+}
+
+- (id)initWithTitle:(NSString *)title message:(NSString *)message defaultText:(NSString*)defaultText {
+   
+    self = [super initWithTitle:title message:message];
+    
+    if (self) {        
+        maxLength = 0;
+        buttonIndexForReturn = 1;
         
-        _height += kTextBoxHeight + kTextBoxSpacing;
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(keyboardWillShow:)
+                                                     name:UIKeyboardWillShowNotification
+                                                   object:nil];
         
-        self.callBack = block;
+        if ([self class] == [BlockTextPromptAlertView class])
+            [self setupDisplay];
     }
     
     return self;
 }
+
 - (void)show {
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillShow:)
-                                                 name:UIKeyboardWillShowNotification
-                                               object:nil];
-    
     [super show];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:textField selector:@selector(becomeFirstResponder) name:@"AlertViewFinishedAnimations" object:nil];
+    [self.textField performSelector:@selector(becomeFirstResponder) withObject:nil afterDelay:0.05];
 }
 
 - (void)dismissWithClickedButtonIndex:(NSInteger)buttonIndex animated:(BOOL)animated {
+    if (self.shouldDismiss) {
+        if (!self.shouldDismiss(buttonIndex, self))
+            return;
+    }
+    
     [super dismissWithClickedButtonIndex:buttonIndex animated:animated];
     
-    [[NSNotificationCenter defaultCenter] removeObserver:textField];
+    [self.textField resignFirstResponder];
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
 }
 
 - (void)keyboardWillShow:(NSNotification *)notification {
-    CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    CGFloat keyboardHeight = 0;
+    CGFloat animationDuration = 0.3;
+    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
     
-    CGFloat screenHeight = [UIScreen mainScreen].bounds.size.height;
+    if(notification) {
+        NSDictionary* keyboardInfo = [notification userInfo];
+        CGRect keyboardFrame = [[keyboardInfo valueForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue];
+        animationDuration = [[keyboardInfo valueForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+
+        if(UIInterfaceOrientationIsPortrait(orientation))
+            keyboardHeight = keyboardFrame.size.height;
+        else
+            keyboardHeight = keyboardFrame.size.width;
+    }
+    
+    CGFloat screenHeight = 0;
+
+    if(UIInterfaceOrientationIsPortrait(orientation))
+        screenHeight = [UIScreen mainScreen].bounds.size.height;
+    else
+        screenHeight = [UIScreen mainScreen].bounds.size.width;
+
+    
     __block CGRect frame = _view.frame;
     
-    if (frame.origin.y + frame.size.height > screenHeight - keyboardSize.height) {
+    if (frame.origin.y + frame.size.height > screenHeight - keyboardHeight) {
         
-        frame.origin.y = screenHeight - keyboardSize.height - frame.size.height;
+        frame.origin.y = screenHeight - keyboardHeight - frame.size.height - 10;
         
         if (frame.origin.y < 0)
             frame.origin.y = 0;
         
-        [UIView animateWithDuration:0.3
+        _cancelBounce = YES;
+        
+        [UIView animateWithDuration:animationDuration
                               delay:0.0
-                            options:UIViewAnimationCurveEaseOut
+                            options:UIViewAnimationCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState
                          animations:^{
                              _view.frame = frame;
                          } 
@@ -118,25 +144,25 @@
 
 
 - (void)setAllowableCharacters:(NSString*)accepted {
-    unacceptedInput = [[NSCharacterSet characterSetWithCharactersInString:accepted] invertedSet];
-    self.textField.delegate = self;
+    unacceptedInput = [[[NSCharacterSet characterSetWithCharactersInString:accepted] invertedSet] retain];
 }
 
 - (void)setMaxLength:(NSInteger)max {
     maxLength = max;
-    self.textField.delegate = self;
 }
 
--(BOOL)textFieldShouldReturn:(UITextField *)_textField{
-    if(callBack){
-        return callBack(self);
-    }
+- (void)setButtonIndexForReturn:(NSInteger)index {
+    buttonIndexForReturn = index;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [self dismissWithClickedButtonIndex:buttonIndexForReturn animated:YES];
+    
     return NO;
 }
 
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-    
-    NSUInteger newLength = [self.textField.text length] + [string length] - range.length;
+- (BOOL)textField:(UITextField *)aTextField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    NSUInteger newLength = [aTextField.text length] + [string length] - range.length;
     
     if (maxLength > 0 && newLength > maxLength)
         return NO;
@@ -150,9 +176,8 @@
         return YES;
 }
 
-- (void)dealloc
-{
-    self.callBack = nil;
+- (void)dealloc {
+    [unacceptedInput release];
     [super dealloc];
 }
 

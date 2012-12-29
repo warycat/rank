@@ -38,7 +38,6 @@
     AppDelegate *app = [UIApplication sharedApplication].delegate;
     NSURL *fileURL = [[app applicationDocumentsDirectory] URLByAppendingPathComponent:self.peer];
     [thumbnailData writeToURL:fileURL atomically:YES];
-//    [[NSUserDefaults standardUserDefaults]setObject:thumbnailData forKey:self.peer];
 
 	// Do any additional setup after loading the view.
 }

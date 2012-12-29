@@ -361,7 +361,7 @@ static SystemSoundID Tink;
     
 }
 
-+ (void)queryBlogsInCollege:(NSString *)college WithHandler:(void (^)(NSArray *blogs))handler
++ (void)queryBlogsInCollege:(NSString *)college withHandler:(void (^)(NSArray *blogs))handler
 {
     NSURL *URL = [self URLwithPHP:QUERY_BLOGS_PHP andDictionary:@{@"college":college}];
     NSURLRequest *request = [NSURLRequest requestWithURL:URL];
@@ -377,7 +377,7 @@ static SystemSoundID Tink;
     }];
 }
 
-+ (void)queryPeersWithPeer:(NSString *)peer WithHandler:(void (^)(NSArray *peers))handler
++ (void)queryPeersWithPeer:(NSString *)peer withHandler:(void (^)(NSArray *peers))handler
 {
     NSURL *URL = [self URLwithPHP:QUERY_PEERS_PHP andDictionary:@{@"peer":peer}];
     NSURLRequest *request = [NSURLRequest requestWithURL:URL];
@@ -451,6 +451,23 @@ static SystemSoundID Tink;
         }
     }];
 }
+
++ (void)getFileWithKey:(NSString *)key withHandler:(void (^)(NSDictionary *info))handler
+{
+    NSURL *URL = [self URLwithPHP:GET_FILE_PHP andDictionary:@{@"key":key}];
+    NSURLRequest *request = [NSURLRequest requestWithURL:URL];
+    [[RankClient sharedClient] networkUp];
+    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+        [[RankClient sharedClient] networkDown];
+        NSDictionary *result = [RankClient processResponse:response withData:data withError:error];
+        if (result) {
+            NSLog(@"get file ok %@",result);
+            NSDictionary *info = [result objectForKey:@"info"];
+            handler(info);
+        }
+    }];
+}
+
 
 + (NSURL *)urlWithPhoto:(NSString *)filename
 {

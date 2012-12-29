@@ -5,6 +5,9 @@
   Created by Larry on 10/23/12.
   Copyright (c) 2012 warycat.com. All rights reserved.
 */
+
+"DOWNLOAD" = "下载";
+
 "FOLDER" = "文件夹";
 
 "FILE" = "文件";

@@ -51,7 +51,6 @@
         NSLog(@"%@",segue.identifier);
         CollegeBlogsViewController *cbvc = segue.destinationViewController;
         NSString *college = sender;
-//        [[NSUserDefaults standardUserDefaults]setObject:college forKey:@"BookmarkedCollege"];
         NSMutableDictionary *history = [[NSUserDefaults standardUserDefaults]objectForKey:@"VisitedColleges"];
         if (!history) {
             history = [NSMutableDictionary dictionary];
@@ -284,12 +283,6 @@
         return YES;
     }
 }
-//- (void)searchBarBookmarkButtonClicked:(UISearchBar *)searchBar
-//{
-//    NSString *college = [[NSUserDefaults standardUserDefaults]stringForKey:@"BookmarkedCollege"];
-//    if (college) {
-//        [self performSegueWithIdentifier:@"CollegeBlogsSegue" sender:college];
-//    }
-//}
+
 
 @end

@@ -51,7 +51,7 @@
 
 - (void)loadPeers
 {
-    [RankClient queryPeersWithPeer:[RankClient peer] WithHandler:^(NSArray *peers) {
+    [RankClient queryPeersWithPeer:[RankClient peer] withHandler:^(NSArray *peers) {
         if (peers.count) {
             NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:@"T" ascending:NO];
             self.peers = [peers sortedArrayUsingDescriptors:@[descriptor]];

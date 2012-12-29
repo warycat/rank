@@ -5,16 +5,33 @@
 
 #import "BlockActionSheet.h"
 #import "BlockBackground.h"
-#import "BlockUI.h"
 
 @implementation BlockActionSheet
 
 @synthesize view = _view;
-@synthesize vignetteBackground = _vignetteBackground;
 
 static UIImage *background = nil;
 static UIFont *titleFont = nil;
 static UIFont *buttonFont = nil;
+
+#define kBounce         10
+#define kBorder         10
+#define kButtonHeight   45
+#define kTopMargin      15
+
+#define kActionSheetBackground   @"action-sheet-panel.png"
+#define kActionSheetBackgroundCapHeight  30
+
+#if __IPHONE_OS_VERSION_MAX_ALLOWED < 60000
+#define NSTextAlignmentCenter       UITextAlignmentCenter
+#define NSLineBreakByWordWrapping   UILineBreakModeWordWrap
+#endif
+
+#ifndef IOS_LESS_THAN_6
+#define IOS_LESS_THAN_6 !([[[UIDevice currentDevice] systemVersion] compare:@"6.0" options:NSNumericSearch] != NSOrderedAscending)
+
+#endif
+
 
 #pragma mark - init
 
@@ -24,8 +41,8 @@ static UIFont *buttonFont = nil;
     {
         background = [UIImage imageNamed:kActionSheetBackground];
         background = [[background stretchableImageWithLeftCapWidth:0 topCapHeight:kActionSheetBackgroundCapHeight] retain];
-        titleFont = [kActionSheetTitleFont retain];
-        buttonFont = [kActionSheetButtonFont retain];
+        titleFont = [[UIFont systemFontOfSize:18] retain];
+        buttonFont = [[UIFont boldSystemFontOfSize:20] retain];
     }
 }
 
@@ -42,31 +59,36 @@ static UIFont *buttonFont = nil;
         CGRect frame = parentView.bounds;
         
         _view = [[UIView alloc] initWithFrame:frame];
+        
+        _view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+        
         _blocks = [[NSMutableArray alloc] init];
-        _height = kActionSheetTopMargin;
+        _height = kTopMargin;
 
         if (title)
         {
             CGSize size = [title sizeWithFont:titleFont
-                            constrainedToSize:CGSizeMake(frame.size.width-kActionSheetBorder*2, 1000)
-                                lineBreakMode:UILineBreakModeWordWrap];
+                            constrainedToSize:CGSizeMake(frame.size.width-kBorder*2, 1000)
+                                lineBreakMode:NSLineBreakByWordWrapping];
             
-            UILabel *labelView = [[UILabel alloc] initWithFrame:CGRectMake(kActionSheetBorder, _height, frame.size.width-kActionSheetBorder*2, size.height)];
+            UILabel *labelView = [[UILabel alloc] initWithFrame:CGRectMake(kBorder, _height, frame.size.width-kBorder*2, size.height)];
             labelView.font = titleFont;
             labelView.numberOfLines = 0;
-            labelView.lineBreakMode = UILineBreakModeWordWrap;
-            labelView.textColor = kActionSheetTitleTextColor;
+            labelView.lineBreakMode = NSLineBreakByWordWrapping;
+            labelView.textColor = [UIColor whiteColor];
             labelView.backgroundColor = [UIColor clearColor];
-            labelView.textAlignment = UITextAlignmentCenter;
-            labelView.shadowColor = kActionSheetTitleShadowColor;
-            labelView.shadowOffset = kActionSheetTitleShadowOffset;
+            labelView.textAlignment = NSTextAlignmentCenter;
+            labelView.shadowColor = [UIColor blackColor];
+            labelView.shadowOffset = CGSizeMake(0, -1);
             labelView.text = title;
+            
+            labelView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+
             [_view addSubview:labelView];
             [labelView release];
             
             _height += size.height + 5;
         }
-        _vignetteBackground = NO;
     }
     
     return self;
@@ -147,42 +169,52 @@ static UIFont *buttonFont = nil;
         image = [image stretchableImageWithLeftCapWidth:(int)(image.size.width)>>1 topCapHeight:0];
         
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-        button.frame = CGRectMake(kActionSheetBorder, _height, _view.bounds.size.width-kActionSheetBorder*2, kActionSheetButtonHeight);
+        button.frame = CGRectMake(kBorder, _height, _view.bounds.size.width-kBorder*2, kButtonHeight);
         button.titleLabel.font = buttonFont;
-        button.titleLabel.minimumFontSize = 6;
+        if (IOS_LESS_THAN_6) {
+#pragma clan diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+            button.titleLabel.minimumFontSize = 10;
+#pragma clan diagnostic pop
+        }
+        else {
+            button.titleLabel.minimumScaleFactor = 0.1;
+        }
         button.titleLabel.adjustsFontSizeToFitWidth = YES;
-        button.titleLabel.textAlignment = UITextAlignmentCenter;
-        button.titleLabel.shadowOffset = kActionSheetButtonShadowOffset;
+        button.titleLabel.textAlignment = NSTextAlignmentCenter;
+        button.titleLabel.shadowOffset = CGSizeMake(0, -1);
         button.backgroundColor = [UIColor clearColor];
         button.tag = i++;
         
         [button setBackgroundImage:image forState:UIControlStateNormal];
-        [button setTitleColor:kActionSheetButtonTextColor forState:UIControlStateNormal];
-        [button setTitleShadowColor:kActionSheetButtonShadowColor forState:UIControlStateNormal];
+        [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [button setTitleShadowColor:[UIColor blackColor] forState:UIControlStateNormal];
         [button setTitle:title forState:UIControlStateNormal];
         button.accessibilityLabel = title;
         
         [button addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchUpInside];
         
+        button.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        
         [_view addSubview:button];
-        _height += kActionSheetButtonHeight + kActionSheetBorder;
+        _height += kButtonHeight + kBorder;
     }
     
     UIImageView *modalBackground = [[UIImageView alloc] initWithFrame:_view.bounds];
     modalBackground.image = background;
     modalBackground.contentMode = UIViewContentModeScaleToFill;
+    modalBackground.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [_view insertSubview:modalBackground atIndex:0];
     [modalBackground release];
     
-    [BlockBackground sharedInstance].vignetteBackground = _vignetteBackground;
     [[BlockBackground sharedInstance] addToMainWindow:_view];
     CGRect frame = _view.frame;
     frame.origin.y = [BlockBackground sharedInstance].bounds.size.height;
-    frame.size.height = _height + kActionSheetBounce;
+    frame.size.height = _height + kBounce;
     _view.frame = frame;
     
     __block CGPoint center = _view.center;
-    center.y -= _height + kActionSheetBounce;
+    center.y -= _height + kBounce;
     
     [UIView animateWithDuration:0.4
                           delay:0.0
@@ -195,7 +227,7 @@ static UIFont *buttonFont = nil;
                                                delay:0.0
                                              options:UIViewAnimationOptionAllowUserInteraction
                                           animations:^{
-                                              center.y += kActionSheetBounce;
+                                              center.y += kBounce;
                                               _view.center = center;
                                           } completion:nil];
                      }];

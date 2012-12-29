@@ -16,7 +16,6 @@
 }
 
 @property (nonatomic, readonly) UIView *view;
-@property (nonatomic, readwrite) BOOL vignetteBackground;
 
 + (id)sheetWithTitle:(NSString *)title;
 

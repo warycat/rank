@@ -19,7 +19,7 @@
 
 - (void)loadPeers
 {
-    [RankClient queryPeersWithPeer:[RankClient peer] WithHandler:^(NSArray *peers) {
+    [RankClient queryPeersWithPeer:[RankClient peer] withHandler:^(NSArray *peers) {
         NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:@"T" ascending:NO];
         self.peers = [NSMutableArray arrayWithArray:[peers sortedArrayUsingDescriptors:@[descriptor]]];
         [self.tableView reloadData];

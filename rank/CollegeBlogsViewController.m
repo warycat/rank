@@ -60,7 +60,7 @@
 
 - (void)loadBlogs
 {
-    [RankClient queryBlogsInCollege:self.college WithHandler:^(NSArray *blogs) {
+    [RankClient queryBlogsInCollege:self.college withHandler:^(NSArray *blogs) {
         NSLog(@"get blogs ok %@",blogs);
         if (blogs.count) {
             NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:@"T" ascending:NO];
