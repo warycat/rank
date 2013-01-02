@@ -13,7 +13,7 @@
 @interface Connection : NSObject <NSURLConnectionDataDelegate>
 
 @property (nonatomic, strong) Download *downloadObject;
-@property (nonatomic, weak) NSURLConnection *connection;
+@property (nonatomic, strong) NSURLConnection *connection;
 @property (nonatomic, strong) NSString *detail;
 
 - (void)cacheFile;

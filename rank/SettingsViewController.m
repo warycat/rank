@@ -56,23 +56,32 @@
         return;
     }
     if ([indexPath isEqual:[NSIndexPath indexPathForRow:0 inSection:1]]) {
+        NSLog(@"weibo");
+        return;
+    }
+    if ([indexPath isEqual:[NSIndexPath indexPathForRow:1 inSection:1]]) {
+        NSLog(@"renren");
+        return;
+    }
+    
+    if ([indexPath isEqual:[NSIndexPath indexPathForRow:0 inSection:2]]) {
         [Appirater rateApp];
         return;
     }
     UIStoryboard *sb = [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone" bundle:[NSBundle mainBundle]];
-    if ([indexPath isEqual:[NSIndexPath indexPathForRow:1 inSection:1]]) {
+    if ([indexPath isEqual:[NSIndexPath indexPathForRow:1 inSection:2]]) {
         WebViewController *wvc = [sb instantiateViewControllerWithIdentifier:@"WebViewController"];
         wvc.URLString = @"http://aws.warycat.com/rank/index.html";
         [self presentModalViewController:wvc animated:NO];
         return;
     }
-    if ([indexPath isEqual:[NSIndexPath indexPathForRow:2 inSection:1]]) {
+    if ([indexPath isEqual:[NSIndexPath indexPathForRow:2 inSection:2]]) {
         NSURL *URL = [NSURL URLWithString:@"mailto://larry@warycat.com?subject=Review"];
         [[UIApplication sharedApplication]openURL:URL];
         return;
     }
     
-    if ([indexPath isEqual:[NSIndexPath indexPathForRow:0 inSection:2]]) {
+    if ([indexPath isEqual:[NSIndexPath indexPathForRow:0 inSection:3]]) {
         NSURL *URL = [NSURL URLWithString:@"https://itunes.apple.com/us/app/da-xue-wei-bo-wei-xin/id570966012?ls=1&mt=8"];
         [[UIApplication sharedApplication]openURL:URL];
         return;

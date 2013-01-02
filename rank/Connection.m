@@ -54,6 +54,7 @@
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
     NSLog( @"%s" , (char *) _cmd );
+    [self.fileHandle closeFile];
     NSString *md5 = [NSFileMD5Hash md5AtPath:self.downloadObject.tempURL.path];
     if ([md5 isEqualToString:self.downloadObject.md5]) {
         [[NSFileManager defaultManager] moveItemAtPath:self.downloadObject.tempURL.path
@@ -67,7 +68,6 @@
         self.detail = @"Authorization Expire";
     }
     [[RankClient sharedClient] networkDown];
-    self.connection = nil;
     NSDictionary *userInfo = @{@"object":self.downloadObject,@"state":@"finish"};
     [[NSNotificationCenter defaultCenter]postNotificationName:CONNECTION_NOTIFICATION
                                                        object:nil
@@ -77,6 +77,7 @@
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
     NSLog( @"%s" , (char *) _cmd );
+    [self.fileHandle closeFile];
     [[RankClient sharedClient] networkDown];
     self.detail = @"Connection Error";
     NSDictionary *userInfo = @{@"object":self.downloadObject,@"state":@"fail"};

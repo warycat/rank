@@ -51,7 +51,9 @@
     Download *downloadObject = [info objectForKey:@"object"];
     NSIndexPath *indexPath = [self.fetchedResultsController indexPathForObject:downloadObject];
     [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
-
+    if ([downloadObject isReady]) {
+        [self.connections removeObjectForKey:downloadObject.objectID];
+    }
 }
 
 - (void)viewDidLoad
@@ -60,9 +62,10 @@
     AppDelegate *app = [UIApplication sharedApplication].delegate;
     self.managedObjectContext = app.managedObjectContext;
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Download"];
-    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
-    fetchRequest.sortDescriptors = @[sortDescriptor];
-    self.fetchedResultsController = [[NSFetchedResultsController alloc]initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
+    NSSortDescriptor *type = [NSSortDescriptor sortDescriptorWithKey:@"type" ascending:YES];
+    NSSortDescriptor *name = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+    fetchRequest.sortDescriptors = @[type,name];
+    self.fetchedResultsController = [[NSFetchedResultsController alloc]initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:@"type" cacheName:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self
                                             selector:@selector(observeDownloadNotification:)
                                                 name:DOWNLOAD_NOTIFICATION
@@ -85,6 +88,11 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView
+{
+    return nil;
+}
+
 #pragma mark - Table view data source
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -95,13 +103,18 @@
     cell.textLabel.text = downloadObject.name;
     if ([downloadObject isReady]) {
         if ([downloadObject.type isEqualToString:@"application/pdf"]) {
-            cell.detailTextLabel.text = @"Ready to Read PDF";
+            cell.detailTextLabel.text = @"Ready to Read";
         }
         if ([downloadObject.type isEqualToString:@"audio/mpeg"]) {
-            cell.detailTextLabel.text = @"Ready to Listen MP3";
+            cell.detailTextLabel.text = @"Ready to Listen";
         }
     }else{
-        cell.detailTextLabel.text = @"Ready to Download";
+        Connection *connection = [self.connections objectForKey:downloadObject.objectID];
+        if (connection) {
+            cell.detailTextLabel.text = connection.detail;
+        }else{
+            cell.detailTextLabel.text = @"Ready to Download";
+        }
     }
     
     
@@ -112,12 +125,16 @@
 
 
 // Override to support conditional editing of the table view.
+
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Return NO if you do not want the specified item to be editable.
+    Download *downloadObject = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    Connection *connection = [self.connections objectForKey:downloadObject.objectID];
+    if (connection) {
+        return NO;
+    }
     return YES;
 }
-
 
 
 // Override to support editing the table view.
@@ -126,18 +143,11 @@
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         // Delete the row from the data source
         Download *downloadObject = [self.fetchedResultsController objectAtIndexPath:indexPath];
-        Connection *connection = [self.connections objectForKey:downloadObject.objectID];
-        if (connection) {
-            NSLog(@"%@",connection.connection);
-            [connection.connection cancel];
-            [self.connections removeObjectForKey:downloadObject.objectID];
-        }else{
-            [[NSFileManager defaultManager] removeItemAtPath:downloadObject.tempURL.path error:nil];
-            [[NSFileManager defaultManager] removeItemAtPath:downloadObject.cacheURL.path error:nil];
-            [self.managedObjectContext deleteObject:downloadObject];
-            AppDelegate *app = [UIApplication sharedApplication].delegate;
-            [app saveContext];
-        }
+        [[NSFileManager defaultManager] removeItemAtPath:downloadObject.tempURL.path error:nil];
+        [[NSFileManager defaultManager] removeItemAtPath:downloadObject.cacheURL.path error:nil];
+        [self.managedObjectContext deleteObject:downloadObject];
+        AppDelegate *app = [UIApplication sharedApplication].delegate;
+        [app saveContext];
     }
     else if (editingStyle == UITableViewCellEditingStyleInsert) {
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
@@ -172,12 +182,21 @@
         }
 
     }else{
-        [alert addButtonWithTitle:@"Download" block:^{
-            Connection *connection = [[Connection alloc]init];
-            connection.downloadObject = downloadObject;
-            [self.connections setObject:connection forKey:downloadObject.objectID];
-            [connection cacheFile];
-        }];
+        Connection *connection = [self.connections objectForKey:downloadObject.objectID];
+        if (connection) {
+            [alert setDestructiveButtonWithTitle:@"Stop" block:^{
+                [connection.connection cancel];
+                [self.connections removeObjectForKey:downloadObject.objectID];
+            }];
+        }else{
+            [alert addButtonWithTitle:@"Download" block:^{
+                Connection *connection = [[Connection alloc]init];
+                connection.downloadObject = downloadObject;
+                [self.connections setObject:connection forKey:downloadObject.objectID];
+                [connection cacheFile];
+            }];
+        }
+
     }
     [alert show];
 
