@@ -11,22 +11,35 @@
 #import "RankClient.h"
 #import "Appirater.h"
 #import "WebViewController.h"
+#import "BlockRenren.h"
+#import "BlockSinaWeibo.h"
 
 @interface SettingsViewController ()
+@property (weak, nonatomic) IBOutlet UILabel *sinaWeiboLabel;
+@property (weak, nonatomic) IBOutlet UILabel *renrenLabel;
 @property (nonatomic, strong) ZBarSymbol *symbol;
 @end
 
 @implementation SettingsViewController
 
+- (void)updateAuth
+{
+    if ([BlockSinaWeibo sharedClient].sinaWeibo.isAuthValid) {
+        self.sinaWeiboLabel.text = [BlockSinaWeibo sharedClient].sinaWeibo.userID;
+    }else{
+        self.sinaWeiboLabel.text = NSLocalizedString(@"UNAUTHORIZED", nil);
+    }
+    if ([Renren sharedRenren].isSessionValid) {
+        self.renrenLabel.text = [BlockRenren sharedClient].uid;
+    }else{
+        self.renrenLabel.text = NSLocalizedString(@"UNAUTHORIZED", nil);
+    }
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    [self updateAuth];
 }
 
 - (void)didReceiveMemoryWarning
@@ -56,11 +69,37 @@
         return;
     }
     if ([indexPath isEqual:[NSIndexPath indexPathForRow:0 inSection:1]]) {
-        NSLog(@"weibo");
+        if ([[BlockSinaWeibo sharedClient].sinaWeibo isAuthValid]) {
+            [[BlockSinaWeibo sharedClient].sinaWeibo logOut];
+            [self updateAuth];
+            [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        }else{
+            [BlockSinaWeibo loginWithHandler:^{
+                [tableView deselectRowAtIndexPath:indexPath animated:YES];
+                [RankClient updateItem:@"SINAWEIBO"
+                            withString:[BlockSinaWeibo sharedClient].sinaWeibo.userID
+                           withHandler:^{
+                           }];
+                [self updateAuth];
+            }];
+        }
         return;
     }
     if ([indexPath isEqual:[NSIndexPath indexPathForRow:1 inSection:1]]) {
-        NSLog(@"renren");
+        if ([Renren sharedRenren].isSessionValid) {
+            [BlockRenren logout];
+            [self updateAuth];
+            [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        }else{
+            [BlockRenren loginWithHandler:^{
+                [tableView deselectRowAtIndexPath:indexPath animated:YES];
+                [RankClient updateItem:@"RENREN"
+                            withString:[BlockRenren sharedClient].uid
+                           withHandler:^{
+                           }];
+                [self updateAuth];
+            }];
+        }
         return;
     }
     
@@ -119,4 +158,9 @@
 }
 
 
+- (void)viewDidUnload {
+    [self setSinaWeiboLabel:nil];
+    [self setRenrenLabel:nil];
+    [super viewDidUnload];
+}
 @end

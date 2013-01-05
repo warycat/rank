@@ -7,6 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		25054B121695A69100611DDC /* TMQuiltView.m in Sources */ = {isa = PBXBuildFile; fileRef = 25054B0D1695A69100611DDC /* TMQuiltView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		25054B131695A69100611DDC /* TMQuiltViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 25054B0F1695A69100611DDC /* TMQuiltViewCell.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		25054B141695A69100611DDC /* TMQuiltViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25054B111695A69100611DDC /* TMQuiltViewController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		25054B171695A75300611DDC /* ChatsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25054B161695A75300611DDC /* ChatsViewController.m */; };
+		25054B1A1695A7EA00611DDC /* ChatCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 25054B191695A7EA00611DDC /* ChatCell.m */; };
+		25054B211698685500611DDC /* BlockShare.m in Sources */ = {isa = PBXBuildFile; fileRef = 25054B201698685500611DDC /* BlockShare.m */; };
+		25054B2316986DAE00611DDC /* iTunesArtwork@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 25054B2216986DAE00611DDC /* iTunesArtwork@2x.png */; };
+		25054B2516986DD800611DDC /* iTunesArtwork.png in Resources */ = {isa = PBXBuildFile; fileRef = 25054B2416986DD800611DDC /* iTunesArtwork.png */; };
+		25054B28169874AC00611DDC /* Download.m in Sources */ = {isa = PBXBuildFile; fileRef = 25054B27169874A900611DDC /* Download.m */; };
 		25165AD116764A010053FC63 /* StatesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25165AD016764A010053FC63 /* StatesViewController.m */; };
 		25165AD71676E1BD0053FC63 /* Radio-Tower@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 25165AD61676E1BD0053FC63 /* Radio-Tower@2x.png */; };
 		25165AD91676E44C0053FC63 /* Chats@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 25165AD81676E44C0053FC63 /* Chats@2x.png */; };
@@ -26,7 +35,6 @@
 		2548AF661688B39500565377 /* Folder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2548AF651688B39500565377 /* Folder@2x.png */; };
 		2548AF6E16894B5200565377 /* ListFilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2548AF6D16894B5200565377 /* ListFilesViewController.m */; };
 		256F3E08168C8F3B00AA0597 /* Connection.m in Sources */ = {isa = PBXBuildFile; fileRef = 256F3E07168C8F3B00AA0597 /* Connection.m */; };
-		256F3E0B168C922800AA0597 /* Download.m in Sources */ = {isa = PBXBuildFile; fileRef = 256F3E0A168C922800AA0597 /* Download.m */; };
 		256F3E0E168D393100AA0597 /* Download+File.m in Sources */ = {isa = PBXBuildFile; fileRef = 256F3E0D168D393100AA0597 /* Download+File.m */; };
 		256F3E1E168D701C00AA0597 /* NSFileMD5Hash.m in Sources */ = {isa = PBXBuildFile; fileRef = 256F3E1D168D701C00AA0597 /* NSFileMD5Hash.m */; };
 		256F3E21168D9CC300AA0597 /* PlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 256F3E20168D9CC200AA0597 /* PlayerViewController.m */; };
@@ -59,8 +67,8 @@
 		2583C3241689CE4600B0C819 /* alert-window-landscape@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2583C31A1689CE4600B0C819 /* alert-window-landscape@2x.png */; };
 		2583C3251689CE4600B0C819 /* alert-window.png in Resources */ = {isa = PBXBuildFile; fileRef = 2583C31B1689CE4600B0C819 /* alert-window.png */; };
 		2583C3261689CE4600B0C819 /* alert-window@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2583C31C1689CE4600B0C819 /* alert-window@2x.png */; };
-		25AE7DB9169431E9004B08C0 /* BlockRenren.m in Sources */ = {isa = PBXBuildFile; fileRef = 25AE7DB6169431E9004B08C0 /* BlockRenren.m */; };
-		25AE7DBA169431E9004B08C0 /* BlockRenrenRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 25AE7DB8169431E9004B08C0 /* BlockRenrenRequest.m */; };
+		25AE7DBC1694727A004B08C0 /* BlockRenren.m in Sources */ = {isa = PBXBuildFile; fileRef = 25AE7DB6169431E9004B08C0 /* BlockRenren.m */; };
+		25AE7DBD1694727A004B08C0 /* BlockRenrenRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 25AE7DB8169431E9004B08C0 /* BlockRenrenRequest.m */; };
 		25B074851670380D00495DC6 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B074841670380D00495DC6 /* Message.m */; };
 		25D5B0681664CC13002D2763 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25D5B0671664CC13002D2763 /* UIKit.framework */; };
 		25D5B06A1664CC13002D2763 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25D5B0691664CC13002D2763 /* Foundation.framework */; };
@@ -248,6 +256,22 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		25054B0C1695A69100611DDC /* TMQuiltView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMQuiltView.h; sourceTree = "<group>"; };
+		25054B0D1695A69100611DDC /* TMQuiltView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMQuiltView.m; sourceTree = "<group>"; };
+		25054B0E1695A69100611DDC /* TMQuiltViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMQuiltViewCell.h; sourceTree = "<group>"; };
+		25054B0F1695A69100611DDC /* TMQuiltViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMQuiltViewCell.m; sourceTree = "<group>"; };
+		25054B101695A69100611DDC /* TMQuiltViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMQuiltViewController.h; sourceTree = "<group>"; };
+		25054B111695A69100611DDC /* TMQuiltViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMQuiltViewController.m; sourceTree = "<group>"; };
+		25054B151695A75300611DDC /* ChatsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatsViewController.h; sourceTree = "<group>"; };
+		25054B161695A75300611DDC /* ChatsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatsViewController.m; sourceTree = "<group>"; };
+		25054B181695A7EA00611DDC /* ChatCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatCell.h; sourceTree = "<group>"; };
+		25054B191695A7EA00611DDC /* ChatCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatCell.m; sourceTree = "<group>"; };
+		25054B1F1698685500611DDC /* BlockShare.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlockShare.h; sourceTree = "<group>"; };
+		25054B201698685500611DDC /* BlockShare.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlockShare.m; sourceTree = "<group>"; };
+		25054B2216986DAE00611DDC /* iTunesArtwork@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@2x.png"; sourceTree = "<group>"; };
+		25054B2416986DD800611DDC /* iTunesArtwork.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iTunesArtwork.png; sourceTree = "<group>"; };
+		25054B26169874A600611DDC /* Download.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Download.h; sourceTree = "<group>"; };
+		25054B27169874A900611DDC /* Download.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Download.m; sourceTree = "<group>"; };
 		25165ACF16764A010053FC63 /* StatesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatesViewController.h; sourceTree = "<group>"; };
 		25165AD016764A010053FC63 /* StatesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatesViewController.m; sourceTree = "<group>"; };
 		25165AD61676E1BD0053FC63 /* Radio-Tower@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Radio-Tower@2x.png"; sourceTree = "<group>"; };
@@ -293,8 +317,6 @@
 		256F3E01168C5A3500AA0597 /* rank 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "rank 2.xcdatamodel"; sourceTree = "<group>"; };
 		256F3E06168C8F3B00AA0597 /* Connection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Connection.h; sourceTree = "<group>"; };
 		256F3E07168C8F3B00AA0597 /* Connection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Connection.m; sourceTree = "<group>"; };
-		256F3E09168C922800AA0597 /* Download.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Download.h; sourceTree = "<group>"; };
-		256F3E0A168C922800AA0597 /* Download.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Download.m; sourceTree = "<group>"; };
 		256F3E0C168D393100AA0597 /* Download+File.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Download+File.h"; sourceTree = "<group>"; };
 		256F3E0D168D393100AA0597 /* Download+File.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Download+File.m"; sourceTree = "<group>"; };
 		256F3E1C168D701C00AA0597 /* NSFileMD5Hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSFileMD5Hash.h; sourceTree = "<group>"; };
@@ -660,6 +682,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		25054B0A1695A64700611DDC /* TMQuilt */ = {
+			isa = PBXGroup;
+			children = (
+				25054B0C1695A69100611DDC /* TMQuiltView.h */,
+				25054B0D1695A69100611DDC /* TMQuiltView.m */,
+				25054B0E1695A69100611DDC /* TMQuiltViewCell.h */,
+				25054B0F1695A69100611DDC /* TMQuiltViewCell.m */,
+				25054B101695A69100611DDC /* TMQuiltViewController.h */,
+				25054B111695A69100611DDC /* TMQuiltViewController.m */,
+			);
+			name = TMQuilt;
+			sourceTree = "<group>";
+		};
 		25165B1D16782F760053FC63 /* BlockUI */ = {
 			isa = PBXGroup;
 			children = (
@@ -804,13 +839,14 @@
 				25D5B0B81664CD27002D2763 /* RankClient.m */,
 				25D5B1321664CEFE002D2763 /* MainStoryboard_iPhone.storyboard */,
 				25D5B0871664CC13002D2763 /* rank.xcdatamodeld */,
-				25FB643016942E75000A8D20 /* Renren */,
+				25054B0A1695A64700611DDC /* TMQuilt */,
 				25FB636E16942995000A8D20 /* Block */,
+				25D5B12F1664CE80002D2763 /* ViewControllers */,
+				25FB643016942E75000A8D20 /* Renren */,
 				25FB635E1694293A000A8D20 /* SinaWeibo */,
 				25FB6329169428FC000A8D20 /* QRCode */,
 				25FB630B169428E4000A8D20 /* FMDB */,
 				25FB6312169428E4000A8D20 /* JSON */,
-				25D5B12F1664CE80002D2763 /* ViewControllers */,
 				256F3E1B168D6D3C00AA0597 /* Utility */,
 				25E4E208167A406D00A2B79B /* Appirater */,
 				25165B3C167884710053FC63 /* ZBarSDK */,
@@ -924,6 +960,8 @@
 				25165AD81676E44C0053FC63 /* Chats@2x.png */,
 				25165AD61676E1BD0053FC63 /* Radio-Tower@2x.png */,
 				25D5B15B1665E080002D2763 /* Icon-72@2x.png */,
+				25054B2416986DD800611DDC /* iTunesArtwork.png */,
+				25054B2216986DAE00611DDC /* iTunesArtwork@2x.png */,
 				25D5B1591665E07A002D2763 /* Icon-72.png */,
 				25D5B1571665E063002D2763 /* Icon@2x.png */,
 				25D5B1551665E05B002D2763 /* Icon.png */,
@@ -1015,6 +1053,10 @@
 				25276D2F1689E959000580AF /* DownloadManagerViewController.m */,
 				256F3E1F168D9CC200AA0597 /* PlayerViewController.h */,
 				256F3E20168D9CC200AA0597 /* PlayerViewController.m */,
+				25054B151695A75300611DDC /* ChatsViewController.h */,
+				25054B161695A75300611DDC /* ChatsViewController.m */,
+				25054B181695A7EA00611DDC /* ChatCell.h */,
+				25054B191695A7EA00611DDC /* ChatCell.m */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -1031,10 +1073,10 @@
 		25D5B1501664ED3B002D2763 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
+				25054B26169874A600611DDC /* Download.h */,
+				25054B27169874A900611DDC /* Download.m */,
 				256F3E0C168D393100AA0597 /* Download+File.h */,
 				256F3E0D168D393100AA0597 /* Download+File.m */,
-				256F3E09168C922800AA0597 /* Download.h */,
-				256F3E0A168C922800AA0597 /* Download.m */,
 				25B074831670380D00495DC6 /* Message.h */,
 				25B074841670380D00495DC6 /* Message.m */,
 				25D5B14D1664EC9A002D2763 /* CoreDataTableViewController.h */,
@@ -1146,6 +1188,8 @@
 		25FB636E16942995000A8D20 /* Block */ = {
 			isa = PBXGroup;
 			children = (
+				25054B1F1698685500611DDC /* BlockShare.h */,
+				25054B201698685500611DDC /* BlockShare.m */,
 				25AE7DB5169431E9004B08C0 /* BlockRenren.h */,
 				25AE7DB6169431E9004B08C0 /* BlockRenren.m */,
 				25AE7DB7169431E9004B08C0 /* BlockRenrenRequest.h */,
@@ -1528,6 +1572,8 @@
 				25FB64BF16942E76000A8D20 /* small-button-normal.png in Resources */,
 				25FB64C016942E76000A8D20 /* small-button-normal@2x.png in Resources */,
 				25FB64DA16942E76000A8D20 /* ROCheckOrderCell.xib in Resources */,
+				25054B2316986DAE00611DDC /* iTunesArtwork@2x.png in Resources */,
+				25054B2516986DD800611DDC /* iTunesArtwork.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1562,6 +1608,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				25AE7DBC1694727A004B08C0 /* BlockRenren.m in Sources */,
+				25AE7DBD1694727A004B08C0 /* BlockRenrenRequest.m in Sources */,
 				25D5B14B1664D597002D2763 /* NSData+Base64.m in Sources */,
 				25D5B14C1664D597002D2763 /* NSString+Base64.m in Sources */,
 				25D5B0761664CC13002D2763 /* main.m in Sources */,
@@ -1603,7 +1651,6 @@
 				2583C2F61689CCCA00B0C819 /* BlockTextPromptAlertView.m in Sources */,
 				25276D301689E959000580AF /* DownloadManagerViewController.m in Sources */,
 				256F3E08168C8F3B00AA0597 /* Connection.m in Sources */,
-				256F3E0B168C922800AA0597 /* Download.m in Sources */,
 				256F3E0E168D393100AA0597 /* Download+File.m in Sources */,
 				256F3E1E168D701C00AA0597 /* NSFileMD5Hash.m in Sources */,
 				256F3E21168D9CC300AA0597 /* PlayerViewController.m in Sources */,
@@ -1681,6 +1728,13 @@
 				25FB64DF16942E76000A8D20 /* ROImageView.m in Sources */,
 				25FB64E016942E76000A8D20 /* ROPublishPhotoDialogModel.m in Sources */,
 				25FB64E116942E76000A8D20 /* ROPublishPhotoInternal.m in Sources */,
+				25054B121695A69100611DDC /* TMQuiltView.m in Sources */,
+				25054B131695A69100611DDC /* TMQuiltViewCell.m in Sources */,
+				25054B141695A69100611DDC /* TMQuiltViewController.m in Sources */,
+				25054B171695A75300611DDC /* ChatsViewController.m in Sources */,
+				25054B1A1695A7EA00611DDC /* ChatCell.m in Sources */,
+				25054B211698685500611DDC /* BlockShare.m in Sources */,
+				25054B28169874AC00611DDC /* Download.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1689,8 +1743,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				25D5B0A51664CC13002D2763 /* rankTests.m in Sources */,
-				25AE7DB9169431E9004B08C0 /* BlockRenren.m in Sources */,
-				25AE7DBA169431E9004B08C0 /* BlockRenrenRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

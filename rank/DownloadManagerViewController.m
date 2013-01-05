@@ -14,6 +14,7 @@
 #import "Connection.h"
 #import "BlockAlertView.h"
 #import "PlayerViewController.h"
+#import "BlockShare.h"
 
 @interface DownloadManagerViewController ()
 
@@ -37,6 +38,7 @@
     downloadObject.url = [info objectForKey:@"url"];
     downloadObject.type = [info objectForKey:@"type"];
     downloadObject.md5 = [info objectForKey:@"md5"];
+    downloadObject.key = [info objectForKey:@"key"];
     CFUUIDRef uuid = CFUUIDCreate(NULL);
     NSString *uuidStr = (__bridge_transfer NSString *)CFUUIDCreateString(NULL, uuid);
     CFRelease(uuid);
@@ -63,7 +65,7 @@
     self.managedObjectContext = app.managedObjectContext;
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Download"];
     NSSortDescriptor *type = [NSSortDescriptor sortDescriptorWithKey:@"type" ascending:YES];
-    NSSortDescriptor *name = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+    NSSortDescriptor *name = [NSSortDescriptor sortDescriptorWithKey:@"key" ascending:YES];
     fetchRequest.sortDescriptors = @[type,name];
     self.fetchedResultsController = [[NSFetchedResultsController alloc]initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:@"type" cacheName:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self
@@ -160,45 +162,52 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     Download *downloadObject = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    BlockAlertView *alert = [[BlockAlertView alloc]initWithTitle:@"Action"
-                                                         message:downloadObject.name];
-    [alert setCancelButtonWithTitle:@"Cancel" block:^{}];
+    BlockAlertView *alert = [[BlockAlertView alloc]initWithTitle:NSLocalizedString(@"ACTION", nil)
+                                                         message:downloadObject.key];
+    [alert setCancelButtonWithTitle:NSLocalizedString(@"CANCEL", nil) block:^{}];
     if ([downloadObject isReady]) {
-        if ([downloadObject.type isEqualToString:@"application/pdf"]) {
-            [alert addButtonWithTitle:@"Open" block:^{
-                [self performSegueWithIdentifier:@"PlayerSegue" sender:downloadObject];
-            }];
-        }else if([downloadObject.type isEqualToString:@"audio/mpeg"]){
-            NSData *data = [NSData dataWithContentsOfFile:downloadObject.cacheURL.path];
-            if ([self.audioData isEqualToData:data]) {
-                [alert addButtonWithTitle:@"Remove" block:^{
-                    self.audioData = nil;
+        if ([BlockShare isAuthValid]) {
+            NSString *url = [@"http://aws.warycat.com/rank/qrcode.php?peer=" stringByAppendingString:[RankClient peer]];
+            [BlockShare shareImage:[UIImage imageNamed:@"iTunesArtwork.png"] withQRcode:url withText:downloadObject.key];
+            if ([downloadObject.type isEqualToString:@"application/pdf"]) {
+                [alert addButtonWithTitle:NSLocalizedString(@"READ", nil) block:^{
+                    [self performSegueWithIdentifier:@"PlayerSegue" sender:downloadObject];
                 }];
-            }else{
-                [alert addButtonWithTitle:@"Listen" block:^{
-                    self.audioData = data;
-                }];
+            }else if([downloadObject.type isEqualToString:@"audio/mpeg"]){
+                NSData *data = [NSData dataWithContentsOfFile:downloadObject.cacheURL.path];
+                if ([self.audioData isEqualToData:data]) {
+                    [alert addButtonWithTitle:NSLocalizedString(@"UNLOAD", nil) block:^{
+                        self.audioData = nil;
+                    }];
+                }else{
+                    [alert addButtonWithTitle:NSLocalizedString(@"LOAD", nil) block:^{
+                        self.audioData = data;
+                    }];
+                }
             }
+            [alert show];
+        }else{
+            BlockAlertView *alert = [[BlockAlertView alloc]initWithTitle:NSLocalizedString(@"AUTHORIZATION", nil) message:nil];
+            [alert setCancelButtonWithTitle:NSLocalizedString(@"OK", nil) block:^{}];
+            [alert show];
         }
-
     }else{
         Connection *connection = [self.connections objectForKey:downloadObject.objectID];
         if (connection) {
-            [alert setDestructiveButtonWithTitle:@"Stop" block:^{
+            [alert setDestructiveButtonWithTitle:NSLocalizedString(@"STOP", nil) block:^{
                 [connection.connection cancel];
                 [self.connections removeObjectForKey:downloadObject.objectID];
             }];
         }else{
-            [alert addButtonWithTitle:@"Download" block:^{
+            [alert addButtonWithTitle:NSLocalizedString(@"DOWNLOAD", nil) block:^{
                 Connection *connection = [[Connection alloc]init];
                 connection.downloadObject = downloadObject;
                 [self.connections setObject:connection forKey:downloadObject.objectID];
                 [connection cacheFile];
             }];
         }
-
+        [alert show];
     }
-    [alert show];
 
 }
 

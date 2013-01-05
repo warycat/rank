@@ -342,7 +342,7 @@ static const NSTimeInterval kTimeoutInterval = 60.0;
             [body appendData:[endLine dataUsingEncoding:NSUTF8StringEncoding]];
         }
         NSData *_dataParam=[_params valueForKey:@"upload"];
-        NSData *imageData = UIImagePNGRepresentation((UIImage*)_dataParam);
+        NSData *imageData = UIImageJPEGRepresentation((UIImage *)_dataParam, 1.0);
         [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"upload\";filename=no.jpg"] dataUsingEncoding:NSUTF8StringEncoding]];
         [body appendData:[endLine dataUsingEncoding:NSUTF8StringEncoding]];
         [body appendData:[[NSString stringWithString:@"Content-Type:image/jpeg\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];  

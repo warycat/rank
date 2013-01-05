@@ -9,37 +9,56 @@
 #import "PhotoViewController.h"
 #import "RankClient.h"
 #import "AppDelegate.h"
+#import "BlockShare.h"
+#import "BlockAlertView.h"
+#import "BlockTextPromptAlertView.h"
+#import "FXImageView.h"
+#import "Barcode.h"
 
 @interface PhotoViewController ()
-@property (weak, nonatomic) IBOutlet UIImageView *imageView;
+@property (weak, nonatomic) IBOutlet FXImageView *imageView;
+@property (strong, nonatomic) UIImage *image;
+@property (strong, nonatomic) UIImage *sinaWeiboImage;
+@property (strong, nonatomic) UIImage *renrenImage;
 
 @end
 
 @implementation PhotoViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     NSURL *URL = [RankClient urlWithPhoto:self.photo];
+    self.imageView.asynchronous = NO;
+    [self.imageView setImageWithContentsOfURL:URL];
     NSData *data = [NSURLConnection sendSynchronousRequest:[NSURLRequest requestWithURL:URL] returningResponse:nil error:nil];
     UIImage *image = [UIImage imageWithData:data];
-    self.imageView.image = image;
+//    NSString *url = [@"http://aws.warycat.com/rank/qrcode.php?peer=" stringByAppendingString:self.peer];
+//    Barcode *barcode = [[Barcode alloc] init];
+//    [barcode setupQRCode:url];
+    self.image = image;
+    
+//    CGSize sinaWeiboSize = CGSizeMake(image.size.width, image.size.height * 2);
+//    UIGraphicsBeginImageContext( sinaWeiboSize );
+//    [image drawInRect:CGRectMake(0,0,image.size.width,image.size.height)];
+//    [barcode.qRBarcode drawInRect:CGRectMake(0,image.size.height,image.size.width,image.size.height)];
+//    self.sinaWeiboImage = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
+//    
+//    CGSize renrenSize = CGSizeMake(image.size.width * 2, image.size.height);
+//    UIGraphicsBeginImageContext( renrenSize );
+//    [image drawInRect:CGRectMake(0,0,image.size.width,image.size.height)];
+//    [barcode.qRBarcode drawInRect:CGRectMake(image.size.width,0,image.size.width,image.size.height)];
+//    self.renrenImage = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
+    
     UIImage *thumbnail = [self imageWithImage:image ByScalingAndCroppingForSize:[self thumbnailsize]];
     NSData *thumbnailData = UIImageJPEGRepresentation(thumbnail, 1.0f);
     AppDelegate *app = [UIApplication sharedApplication].delegate;
     NSURL *fileURL = [[app applicationDocumentsDirectory] URLByAppendingPathComponent:self.peer];
     [thumbnailData writeToURL:fileURL atomically:YES];
 
-	// Do any additional setup after loading the view.
 }
 
 - (void)didReceiveMemoryWarning
@@ -49,6 +68,38 @@
 }
 - (IBAction)dismissPhotoView:(id)sender {
     [self.presentingViewController dismissModalViewControllerAnimated:YES];
+}
+
+- (IBAction)sharePeer:(id)sender {
+    if ([BlockShare isAuthValid]) {
+        BlockTextPromptAlertView *alert = [[BlockTextPromptAlertView alloc]initWithTitle:NSLocalizedString(@"SHARE", nil)
+                                                                                 message:nil
+                                                                             defaultText:nil];
+        [alert setCancelButtonWithTitle:NSLocalizedString(@"CANCEL", nil) block:^{}];
+        [alert addButtonWithTitle:NSLocalizedString(@"OK", nil) block:^{
+            NSString *url = [@"http://aws.warycat.com/rank/qrcode.php?peer=" stringByAppendingString:self.peer];
+            [BlockShare shareImage:self.image withQRcode:url withText:alert.textField.text];
+//            if ([Renren sharedRenren].isSessionValid) {
+//                [BlockRenrenRequest publishPhoto:self.renrenImage withCaption:alert.textField.text
+//                                     withHandler:^(id result){
+//                                         NSLog(@"%@",result);
+//                                     }];
+//            }
+//            if ([BlockSinaWeibo sharedClient].sinaWeibo.isAuthValid) {
+//                [BlockSinaWeiboRequest POSTrequestAPI:@"statuses/upload.json"
+//                                           withParams:@{@"status":alert.textField.text,@"pic":self.sinaWeiboImage}
+//                                          withHandler:^(id result){
+//                                              NSLog(@"%@",result);
+//                                          }];
+//            }
+        }];
+        [alert show];
+    }else{
+        BlockAlertView *alert = [[BlockAlertView alloc]initWithTitle:NSLocalizedString(@"AUTHORIZATION", nil) message:nil];
+        [alert setCancelButtonWithTitle:NSLocalizedString(@"OK", nil) block:^{}];
+        [alert show];
+    }
+    NSLog(@"%@ %@",self.peer,self.photo);
 }
 
 - (void)viewDidUnload {

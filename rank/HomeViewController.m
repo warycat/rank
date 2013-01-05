@@ -44,10 +44,11 @@
         @"HOBBY",
     
         @"QQ",
-        @"SINAWEIBO",
-        @"RENREN",
-        @"DOUBAN",
+
     ];
+//    @"SINAWEIBO",
+//    @"RENREN",
+//    @"DOUBAN",
     self.identifiers = @{
         @"NICKNAME":@"EditStringSegue",
         @"SEX":@"EditSexSegue",
@@ -83,7 +84,8 @@
 {
     self.navigationItem.rightBarButtonItem.enabled = NO;
     self.editing = NO;
-    [RankClient getPeerWithPeer:[RankClient peer] withHandler:^(NSMutableArray *items, NSMutableArray *photos) {
+    [RankClient getPeerWithPeer:[RankClient peer]
+                    withHandler:^(NSMutableArray *items, NSMutableArray *photos) {
         self.items = items;
         self.photos = photos;
         [self.tableView reloadData];
@@ -223,6 +225,14 @@
 // Override to support editing the table view.
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSDictionary *item = [self.items objectAtIndex:indexPath.row];
+    NSString *key = [item objectForKey:@"K"];
+    if ([key isEqualToString:@"SINAWEIBO"]) {
+        return;
+    }
+    if ([key isEqualToString:@"RENREN"]) {
+        return;
+    }
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         // Delete the row from the data source
         NSLog(@"delete %@",indexPath);
@@ -284,6 +294,14 @@
             [self insertNewItemAtIndexPath:indexPath];
         }else{
             NSString *key = [item objectForKey:@"K"];
+            if ([key isEqualToString:@"SINAWEIBO"]) {
+                [tableView deselectRowAtIndexPath:indexPath animated:YES];
+                return;
+            }
+            if ([key isEqualToString:@"RENREN"]) {
+                [tableView deselectRowAtIndexPath:indexPath animated:YES];
+                return;
+            }
             NSString *identifier = [self.identifiers objectForKey:key];
             if (identifier) {
                 [self performSegueWithIdentifier:identifier sender:indexPath];

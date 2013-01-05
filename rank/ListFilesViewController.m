@@ -146,6 +146,7 @@
                     ETag = [ETag stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\""]];
                     NSDictionary *userInfo = @{
                         @"url":[info objectForKey:@"url"],
+                        @"key":key,
                         @"name":name,
                         @"size":[info objectForKey:@"Size"],
                         @"md5": ETag,

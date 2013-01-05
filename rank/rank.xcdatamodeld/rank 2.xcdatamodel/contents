@@ -2,6 +2,7 @@
 <model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1811" systemVersion="12B19" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Download" representedClassName="Download" syncable="YES">
         <attribute name="file" attributeType="String" syncable="YES"/>
+        <attribute name="key" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="md5" attributeType="String" syncable="YES"/>
         <attribute name="name" attributeType="String" syncable="YES"/>
         <attribute name="size" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
@@ -15,7 +16,7 @@
         <attribute name="to" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
+        <element name="Download" positionX="160" positionY="192" width="128" height="150"/>
         <element name="Message" positionX="160" positionY="192" width="128" height="105"/>
-        <element name="Download" positionX="160" positionY="192" width="128" height="135"/>
     </elements>
 </model>

@@ -11,6 +11,7 @@
 #import "CoverFlowViewController.h"
 #import "NewMessageViewController.h"
 #import "BlockAlertView.h"
+#import "WebViewController.h"
 
 @interface PeerViewController ()
 @property (strong, nonatomic) NSMutableArray *items;
@@ -33,6 +34,12 @@
         cfvc.photos = self.photos;
         cfvc.peer = self.peer;
         cfvc.editing = NO;
+        return;
+    }
+    if ([segue.identifier isEqualToString:@"WebViewSegue"]) {
+        NSLog(@"%@",segue.identifier);
+        WebViewController *wvc = segue.destinationViewController;
+        wvc.URLString = sender;
         return;
     }
 }
@@ -149,6 +156,12 @@
     if ([key isEqualToString:@"ALIPAY"]) {
         return YES;
     }
+    if ([key isEqualToString:@"SINAWEIBO"]) {
+        return YES;
+    }
+    if ([key isEqualToString:@"RENREN"]) {
+        return YES;
+    }
     return NO;
 }
 
@@ -203,8 +216,19 @@
         [self performSegueWithIdentifier:@"CoverFlowSegue" sender:self];
     }
     NSDictionary *dict = [self.items objectAtIndex:indexPath.row];
-    if ([self hasActionWithKey:[dict objectForKey:@"K"]]) {
-        [self performActionWithKey:[dict objectForKey:@"K"] andValue:[dict objectForKey:@"S"]];
+    NSString *key = [dict objectForKey:@"K"];
+    if ([self hasActionWithKey:key]) {
+        if ([key isEqualToString:@"SINAWEIBO"]) {
+            NSString *url = [@"http://m.weibo.cn/u/" stringByAppendingString:[dict objectForKey:@"S"]];
+            [self performSegueWithIdentifier:@"WebViewSegue" sender:url];
+            return;
+        }
+        if ([key isEqualToString:@"RENREN"]) {
+            NSString *url = [@"http://3g.renren.com/profile.do?id=" stringByAppendingString:[dict objectForKey:@"S"]];
+            [self performSegueWithIdentifier:@"WebViewSegue" sender:url];
+            return;
+        }
+        [self performActionWithKey:key andValue:[dict objectForKey:@"S"]];
     }else{
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
     }

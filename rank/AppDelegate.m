@@ -11,6 +11,7 @@
 #import "WebViewController.h"
 #import "PeerViewController.h"
 #import "Appirater.h"
+#import "BlockSinaWeibo.h"
 
 @implementation AppDelegate
 
@@ -93,6 +94,9 @@
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
+    if ([url.scheme isEqualToString:kCallbackScheme]) {
+        return [[BlockSinaWeibo sharedClient].sinaWeibo handleOpenURL:url];
+    }
     [RankClient processRemoteNotification:@{@"peer":[url query]}];
     return YES;
 }
@@ -122,6 +126,7 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
+    [[BlockSinaWeibo sharedClient].sinaWeibo applicationDidBecomeActive];
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 }
 

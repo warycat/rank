@@ -590,7 +590,6 @@ static Renren *sharedRenren = nil;
             [[NSNotificationCenter defaultCenter] postNotificationName:@"kNotificationDidGetLoggedInUserId" object:nil];
         }
         
-        return;
     }
     if(self.renrenDelegate && [self.renrenDelegate respondsToSelector:@selector(renren:requestDidReturnResponse:)]){
         [self.renrenDelegate renren:self requestDidReturnResponse:request.responseObject];     

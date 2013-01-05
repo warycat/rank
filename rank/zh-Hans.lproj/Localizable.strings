@@ -6,6 +6,22 @@
   Copyright (c) 2012 warycat.com. All rights reserved.
 */
 
+"STOP" = "终止";
+
+"UNLOAD" = "卸载";
+
+"LOAD" = "加载";
+
+"ACTION" = "操作";
+
+"READ" = "阅读";
+
+"SHARE" = "分享";
+
+"AUTHORIZATION" = "设置授权";
+
+"UNAUTHORIZED" = "未授权";
+
 "DOWNLOAD" = "下载";
 
 "FOLDER" = "文件夹";

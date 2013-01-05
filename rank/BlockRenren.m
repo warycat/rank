@@ -45,11 +45,15 @@
 
 + (void)loginWithHandler:(void(^)())handler
 {
-    [[Renren sharedRenren] logout:[BlockRenren sharedClient]];
+//    [[Renren sharedRenren] logout:[BlockRenren sharedClient]];
     [[Renren sharedRenren] authorizationWithPermisson:@[@"photo_upload"] andDelegate:[BlockRenren sharedClient]];
     [BlockRenren sharedClient].loginBlock = handler;
 }
 
++ (void)logout
+{
+    [[Renren sharedRenren] logout:[BlockRenren sharedClient]];
+}
 
 - (void)renrenDidLogin:(Renren *)renren
 {
@@ -59,7 +63,8 @@
 - (void)renren:(Renren *)renren requestDidReturnResponse:(ROResponse *)response
 {
     NSDictionary *dict = response.rootObject;
-    self.uid = [dict objectForKey:@"uid"];
+    NSNumber *uid = [dict objectForKey:@"uid"];
+    self.uid = uid.stringValue;
     [BlockRenren sharedClient].loginBlock();
 }
 
