@@ -42,7 +42,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = [self.item objectForKey:@"K"];
+    self.title = NSLocalizedString([self.item objectForKey:@"K"],nil);
     self.sex = [self.item objectForKey:@"S"];
 }
 

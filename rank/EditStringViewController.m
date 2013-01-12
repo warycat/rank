@@ -28,8 +28,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.textView.text = [self.item objectForKey:@"S"];
     self.title = NSLocalizedString([self.item objectForKey:@"K"],nil);
+    self.textView.text = [self.item objectForKey:@"S"];
     NSDictionary *keyboardsTypes = @{
         @"NICKNAME":[NSNumber numberWithInt:UIKeyboardTypeDefault],
         @"CITY":[NSNumber numberWithInt:UIKeyboardTypeDefault],

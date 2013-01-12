@@ -16,6 +16,7 @@
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *playButtonItem;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *pauseButtonItem;
 @property (weak, nonatomic) IBOutlet UISlider *slider;
+@property (nonatomic, strong) NSTimer *timer;
 
 @end
 
@@ -39,7 +40,7 @@
         self.player = [[AVAudioPlayer alloc]initWithData:self.audio error:nil];
         self.slider.maximumValue = self.player.duration;
         self.slider.value = 0.0f;
-        [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(updateTime:) userInfo:nil repeats:YES];
+        self.timer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(updateTime:) userInfo:nil repeats:YES];
 
     }
     [self.webView loadData:self.data MIMEType:self.type textEncodingName:nil baseURL:nil];
@@ -78,6 +79,11 @@
 }
 
 - (IBAction)dismissPlayer:(id)sender {
+    if (self.audio) {
+        [self.player stop];
+        self.player = nil;
+        [self.timer invalidate];
+    }
     [self.presentingViewController dismissViewControllerAnimated:YES completion:^{}];
 }
 

@@ -32,10 +32,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = [self.item objectForKey:@"K"];
+    self.title = NSLocalizedString([self.item objectForKey:@"K"],nil);
     self.time = [self.item objectForKey:@"N"];
 	// Do any additional setup after loading the view.
 }
+
 
 - (void)didReceiveMemoryWarning
 {

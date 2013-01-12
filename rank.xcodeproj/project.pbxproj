@@ -31,6 +31,7 @@
 		25165B621678852E0053FC63 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25165B611678852E0053FC63 /* CoreMedia.framework */; };
 		25165B64167885420053FC63 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25165B63167885420053FC63 /* CoreVideo.framework */; };
 		25165B66167885B00053FC63 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 25165B65167885AF0053FC63 /* libiconv.dylib */; };
+		2523C70C169DBA1E00402537 /* Marker@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2523C70B169DBA1E00402537 /* Marker@2x.png */; };
 		25276D301689E959000580AF /* DownloadManagerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25276D2F1689E959000580AF /* DownloadManagerViewController.m */; };
 		2548AF661688B39500565377 /* Folder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2548AF651688B39500565377 /* Folder@2x.png */; };
 		2548AF6E16894B5200565377 /* ListFilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2548AF6D16894B5200565377 /* ListFilesViewController.m */; };
@@ -309,6 +310,7 @@
 		25165B611678852E0053FC63 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		25165B63167885420053FC63 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		25165B65167885AF0053FC63 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
+		2523C70B169DBA1E00402537 /* Marker@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Marker@2x.png"; sourceTree = "<group>"; };
 		25276D2E1689E959000580AF /* DownloadManagerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadManagerViewController.h; sourceTree = "<group>"; };
 		25276D2F1689E959000580AF /* DownloadManagerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadManagerViewController.m; sourceTree = "<group>"; };
 		2548AF651688B39500565377 /* Folder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Folder@2x.png"; sourceTree = "<group>"; };
@@ -955,6 +957,7 @@
 				2583C3031689CE3500B0C819 /* action-sheet-panel.png */,
 				2583C3041689CE3500B0C819 /* action-sheet-panel@2x.png */,
 				2548AF651688B39500565377 /* Folder@2x.png */,
+				2523C70B169DBA1E00402537 /* Marker@2x.png */,
 				25165ADC16773DC10053FC63 /* Gear@2x.png */,
 				25165ADA1676E61C0053FC63 /* Wallet@2x.png */,
 				25165AD81676E44C0053FC63 /* Chats@2x.png */,
@@ -1574,6 +1577,7 @@
 				25FB64DA16942E76000A8D20 /* ROCheckOrderCell.xib in Resources */,
 				25054B2316986DAE00611DDC /* iTunesArtwork@2x.png in Resources */,
 				25054B2516986DD800611DDC /* iTunesArtwork.png in Resources */,
+				2523C70C169DBA1E00402537 /* Marker@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
